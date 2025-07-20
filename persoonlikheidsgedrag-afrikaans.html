@@ -13,24 +13,58 @@
         }
         /* Red highlight for unanswered questions on submission error */
         .unanswered-question {
-            border: 2px solid #ef4444; /* Rooi rand */
-            background-color: #fef2f2; /* Ligrooi agtergrond */
+            border: 2px solid #ef4444; /* Red border */
+            background-color: #fef2f2; /* Light red background */
         }
         /* Subtle highlight for the next question to focus on during filling */
         .next-focus-question {
-            border: 2px solid #f97316; /* Oranje rand */
-            background-color: #fff7ed; /* Ligoranje agtergrond */
+            border: 2px solid #f97316; /* Orange border */
+            background-color: #fff7ed; /* Light orange background */
+        }
+        /* Style for real-time error message */
+        .question-error-message {
+            color: #dc2626; /* Red text */
+            font-size: 0.875rem; /* text-sm */
+            margin-top: 0.5rem;
+            text-align: left;
+        }
+        /* Styles for the custom message box */
+        .message-box {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none; /* Hidden by default */
+            font-weight: bold;
+            text-align: center;
+        }
+        .message-box.success {
+            background-color: #d1fae5; /* green-100 */
+            color: #065f46; /* green-800 */
+            border: 1px solid #34d399; /* green-400 */
+        }
+        .message-box.error {
+            background-color: #fee2e2; /* red-100 */
+            color: #991b1b; /* red-800 */
+            border: 1px solid #f87171; /* red-400 */
         }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
-    <!-- Header Section - Reusing the same header structure as index.html -->
+    <!-- Header Section -->
     <header class="bg-white shadow-md py-4">
         <div class="container mx-auto px-4 flex justify-center items-center">
             <!-- Business Logo as Title -->
             <img src="https://i.imgur.com/Zx34Iky.png" alt="Jou Besigheidslogo" class="h-24 sm:h-32 md:h-40 w-full object-contain rounded-lg shadow-sm">
         </div>
     </header>
+
+    <!-- Custom Message Box -->
+    <div id="messageBox" class="message-box"></div>
 
     <!-- Main Content Section for the Assessment -->
     <main class="flex-grow container mx-auto px-4 py-8 flex flex-col items-center justify-center">
@@ -42,286 +76,320 @@
                 Afrikaanse Weergawe
             </h2>
             <p class="text-lg text-gray-700 mb-8 text-left">
-                Welkom by die Persoonlikheidsgedrag Analise. Hierdie vraelys is ontwerp om jou te help om jou natuurlike voorkeure en hoe jy met die wêreld om jou interaksie het, te verstaan. Antwoord asseblief eerlik, aangesien daar geen regte of verkeerde antwoorde is nie. Jou antwoorde sal waardevolle insigte in jou unieke funksioneringstyl bied.
+                Welkom by die Persoonlikheidsgedrag Analise. Beantwoord elke vraag deur die opsie te kies wat jou die beste beskryf. Elke antwoord dra by tot een van die persoonlikheidsvoorkeurdimensies. Jou antwoorde sal help om insigte in jou unieke persoonlikheidsprofiel te gee.
             </p>
+
+            <!-- User Information Form -->
+            <div class="mb-8 p-6 bg-blue-50 rounded-lg shadow-inner text-left">
+                <h3 class="text-xl font-semibold text-blue-800 mb-4">Jou Besonderhede</h3>
+                <div class="mb-4">
+                    <label for="userName" class="block text-gray-700 text-sm font-bold mb-2">Jou Naam:</label>
+                    <input type="text" id="userName" name="userName" placeholder="Voer jou volle naam in"
+                           class="shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-indigo-500" required>
+                </div>
+            </div>
 
             <!-- Assessment Questions Form -->
             <form id="assessmentForm" class="border-t border-gray-200 pt-8 mt-8 text-left">
+
                 <!-- Question 1 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q1-block">
                     <p class="text-lg font-semibold text-gray-800 mb-3">1. Wanneer jy gestres is, wat help jou die meeste?</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q1" value="A">
-                        <span class="ml-2 text-gray-700">A) Praat met vriende of familie daaroor</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q1" value="B">
-                        <span class="ml-2 text-gray-700">B) Alleen-tyd neem om te dink en te prosesseer</span>
-                    </label>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q1-a" name="q1" value="A" class="mr-2">
+                        <label for="q1-a" class="text-gray-700">A) Praat met vriende of familie daaroor</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q1-b" name="q1" value="B" class="mr-2">
+                        <label for="q1-b" class="text-gray-700">B) Alleen-tyd neem om te dink en te prosesseer</label>
+                    </div>
+                    <div id="q1-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 2 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q2-block">
                     <p class="text-lg font-semibold text-gray-800 mb-3">2. Op 'n party of sosiale byeenkoms:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q2" value="A">
-                        <span class="ml-2 text-gray-700">A) Gesels jy met baie mense en voel gelaai</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q2" value="B">
-                        <span class="ml-2 text-gray-700">B) Hou jy by 'n paar mense en voel uitgeput na 'n ruk</span>
-                    </label>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q2-a" name="q2" value="A" class="mr-2">
+                        <label for="q2-a" class="text-gray-700">A) Gesels jy met baie mense en voel gelaai</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q2-b" name="q2" value="B" class="mr-2">
+                        <label for="q2-b" class="text-gray-700">B) Hou jy by 'n paar mense en voel uitgeput na 'n ruk</label>
+                    </div>
+                    <div id="q2-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 3 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q3-block">
                     <p class="text-lg font-semibold text-gray-800 mb-3">3. Wanneer jy 'n probleem probeer oplos:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q3" value="A">
-                        <span class="ml-2 text-gray-700">A) Dink jy hardop en bespreek dit met ander</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q3" value="B">
-                        <span class="ml-2 text-gray-700">B) Dink jy eers deeglik daaroor voor jy dit deel</span>
-                    </label>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q3-a" name="q3" value="A" class="mr-2">
+                        <label for="q3-a" class="text-gray-700">A) Dink jy hardop en bespreek dit met ander</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q3-b" name="q3" value="B" class="mr-2">
+                        <label for="q3-b" class="text-gray-700">B) Dink jy eers deeglik daaroor voor jy dit deel</label>
+                    </div>
+                    <div id="q3-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 4 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q4-block">
                     <p class="text-lg font-semibold text-gray-800 mb-3">4. Jou ideale naweek sou wees:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q4" value="A">
-                        <span class="ml-2 text-gray-700">A) Verskeie aktiwiteite met vriende en familie</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q4" value="B">
-                        <span class="ml-2 text-gray-700">B) Rustige tyd tuis met 'n goeie boek of stokperdjie</span>
-                    </label>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q4-a" name="q4" value="A" class="mr-2">
+                        <label for="q4-a" class="text-gray-700">A) Verskeie aktiwiteite met vriende en familie</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q4-b" name="q4" value="B" class="mr-2">
+                        <label for="q4-b" class="text-gray-700">B) Rustige tyd tuis met 'n goeie boek of stokperdjie</label>
+                    </div>
+                    <div id="q4-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 5 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q5-block">
                     <p class="text-lg font-semibold text-gray-800 mb-3">5. Wanneer jy nuwe mense ontmoet:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q5" value="A">
-                        <span class="ml-2 text-gray-700">A) Voel jy gemaklik om eerste kontak te maak</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q5" value="B">
-                        <span class="ml-2 text-gray-700">B) Wag jy liewer dat hulle eerste nader kom</span>
-                    </label>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q5-a" name="q5" value="A" class="mr-2">
+                        <label for="q5-a" class="text-gray-700">A) Voel jy gemaklik om eerste kontak te maak</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q5-b" name="q5" value="B" class="mr-2">
+                        <label for="q5-b" class="text-gray-700">B) Wag jy liewer dat hulle eerste nader kom</label>
+                    </div>
+                    <div id="q5-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 6 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q6-block">
                     <p class="text-lg font-semibold text-gray-800 mb-3">6. Wanneer jy 'n nuwe projek begin:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q6" value="A">
-                        <span class="ml-2 text-gray-700">A) Begin jy met konkrete stappe en praktiese details</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q6" value="B">
-                        <span class="ml-2 text-gray-700">B) Begin jy met die groot prentjie en moontlikhede</span>
-                    </label>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q6-a" name="q6" value="A" class="mr-2">
+                        <label for="q6-a" class="text-gray-700">A) Begin jy met konkrete stappe en praktiese details</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q6-b" name="q6" value="B" class="mr-2">
+                        <label for="q6-b" class="text-gray-700">B) Begin jy met die groot prentjie en moontlikhede</label>
+                    </div>
+                    <div id="q6-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 7 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q7-block">
                     <p class="text-lg font-semibold text-gray-800 mb-3">7. Jy verkies instruksies wat:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q7" value="A">
-                        <span class="ml-2 text-gray-700">A) Stap-vir-stap en spesifiek is</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q7" value="B">
-                        <span class="ml-2 text-gray-700">B) Die doel verduidelik sodat jy jou eie weg kan vind</span>
-                    </label>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q7-a" name="q7" value="A" class="mr-2">
+                        <label for="q7-a" class="text-gray-700">A) Stap-vir-stap en spesifiek is</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q7-b" name="q7" value="B" class="mr-2">
+                        <label for="q7-b" class="text-gray-700">B) Die doel verduidelik sodat jy jou eie weg kan vind</label>
+                    </div>
+                    <div id="q7-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 8 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q8-block">
                     <p class="text-lg font-semibold text-gray-800 mb-3">8. Wanneer jy 'n verhaal vertel:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q8" value="A">
-                        <span class="ml-2 text-gray-700">A) Gee jy akkurate details en feite</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q8" value="B">
-                        <span class="ml-2 text-gray-700">B) Fokus jy op die betekenis en impak</span>
-                    </label>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q8-a" name="q8" value="A" class="mr-2">
+                        <label for="q8-a" class="text-gray-700">A) Gee jy akkurate details en feite</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q8-b" name="q8" value="B" class="mr-2">
+                        <label for="q8-b" class="text-gray-700">B) Fokus jy op die betekenis en impak</label>
+                    </div>
+                    <div id="q8-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 9 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q9-block">
                     <p class="text-lg font-semibold text-gray-800 mb-3">9. Jy vind dit meer interessant om te praat oor:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q9" value="A">
-                        <span class="ml-2 text-gray-700">A) Praktiese dinge en werklike ervarings</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q9" value="B">
-                        <span class="ml-2 text-gray-700">B) Idees, teorieë en toekomsmoontlikhede</span>
-                    </label>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q9-a" name="q9" value="A" class="mr-2">
+                        <label for="q9-a" class="text-gray-700">A) Praktiese dinge en werklike ervarings</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q9-b" name="q9" value="B" class="mr-2">
+                        <label for="q9-b" class="text-gray-700">B) Idees, teorieë en toekomstige moontlikhede</label>
+                    </div>
+                    <div id="q9-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 10 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q10-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">10. Wanneer jy 'n besluit moet maak:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q10" value="A">
-                        <span class="ml-2 text-gray-700">A) Kyk jy na wat in die verlede gewerk het</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q10" value="B">
-                        <span class="ml-2 text-gray-700">B) Ondersoek jy nuwe en innoverende opsies</span>
-                    </label>
+                    <p class="text-lg font-semibold text-gray-800 mb-3">10. Wanneer jy 'n besluit moet neem, baseer jy dit gewoonlik op:</p>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q10-a" name="q10" value="A" class="mr-2">
+                        <label for="q10-a" class="text-gray-700">A) Wat in die verlede gewerk het</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q10-b" name="q10" value="B" class="mr-2">
+                        <label for="q10-b" class="text-gray-700">B) Nuwe en innoverende opsies</label>
+                    </div>
+                    <div id="q10-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 11 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q11-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">11. Wanneer jy 'n dispuut moet oplos:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q11" value="A">
-                        <span class="ml-2 text-gray-700">A) Fokus jy op feite en logiese oplossings</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q11" value="B">
-                        <span class="ml-2 text-gray-700">B) Oorweeg jy hoe almal daaroor sal voel</span>
-                    </label>
+                    <p class="text-lg font-semibold text-gray-800 mb-3">11. Wanneer jy konflik oplos:</p>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q11-a" name="q11" value="A" class="mr-2">
+                        <label for="q11-a" class="text-gray-700">A) Fokus jy op feite en logiese oplossings</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q11-b" name="q11" value="B" class="mr-2">
+                        <label for="q11-b" class="text-gray-700">B) Fokus jy op mense se gevoelens en verhoudings</label>
+                    </div>
+                    <div id="q11-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 12 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q12-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">12. Jy maak besluite hoofsaaklik gebaseer op:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q12" value="A">
-                        <span class="ml-2 text-gray-700">A) Wat logies en effektief is</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q12" value="B">
-                        <span class="ml-2 text-gray-700">B) Wat in lyn is met jou waardes en ander se behoeftes</span>
-                    </label>
+                    <p class="text-lg font-semibold text-gray-800 mb-3">12. Wanneer jy 'n besluit neem, prioritiseer jy:</p>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q12-a" name="q12" value="A" class="mr-2">
+                        <label for="q12-a" class="text-gray-700">A) Objektiewe analise en konsekwentheid</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q12-b" name="q12" value="B" class="mr-2">
+                        <label for="q12-b" class="text-gray-700">B) Persoonlike waardes en impak op mense</label>
+                    </div>
+                    <div id="q12-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 13 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q13-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">13. Wanneer jy kritiek gee:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q13" value="A">
-                        <span class="ml-2 text-gray-700">A) Is jy reguit en fokus op wat verbeter kan word</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q13" value="B">
-                        <span class="ml-2 text-gray-700">B) Probeer jy dit sagkens sê om nie gevoelens te seer nie</span>
-                    </label>
+                    <p class="text-lg font-semibold text-gray-800 mb-3">13. Wanneer jy kritiek gee, neig jy om:</p>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q13-a" name="q13" value="A" class="mr-2">
+                        <label for="q13-a" class="text-gray-700">A) Reguit en eerlik te wees, selfs al is dit moeilik</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q13-b" name="q13" value="B" class="mr-2">
+                        <label for="q13-b" class="text-gray-700">B) Sagkens te sê om gevoelens te beskerm</label>
+                    </div>
+                    <div id="q13-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 14 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q14-block">
                     <p class="text-lg font-semibold text-gray-800 mb-3">14. Jy waardeer mense wat:</p>
-                    <div class="mb-2">
-                        <label class="inline-flex items-center cursor-pointer">
-                            <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q14" value="A">
-                            <span class="ml-2 text-gray-700">A) Regverdig en konsekwent is</span>
-                        </label>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q14-a" name="q14" value="A" class="mr-2">
+                        <label for="q14-a" class="text-gray-700">A) Regverdig en konsekwent is</label>
                     </div>
-                    <div>
-                        <label class="inline-flex items-center cursor-pointer">
-                            <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q14" value="B">
-                            <span class="ml-2 text-gray-700">B) Empaties en verstaan is</span>
-                        </label>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q14-b" name="q14" value="B" class="mr-2">
+                        <label for="q14-b" class="text-gray-700">B) Empaties en verstaan is</label>
                     </div>
+                    <div id="q14-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 15 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q15-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">15. In 'n spanomgewing:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q15" value="A">
-                        <span class="ml-2 text-gray-700">A) Fokus jy op doeltreffendheid en resultate</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q15" value="B">
-                        <span class="ml-2 text-gray-700">B) Maak jy seker almal voel ingesluit en gewaardeer</span>
-                    </label>
+                    <p class="text-lg font-semibold text-gray-800 mb-3">15. In 'n spanomgewing fokus jy op:</p>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q15-a" name="q15" value="A" class="mr-2">
+                        <label for="q15-a" class="text-gray-700">A) Doeltreffendheid en resultate</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q15-b" name="q15" value="B" class="mr-2">
+                        <label for="q15-b" class="text-gray-700">B) Almal voel ingesluit en gewaardeer</label>
+                    </div>
+                    <div id="q15-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 16 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q16-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">16. Jou werkruimte is gewoonlik:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q16" value="A">
-                        <span class="ml-2 text-gray-700">A) Netjies en georganiseer</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q16" value="B">
-                        <span class="ml-2 text-gray-700">B) 'n Bietjie rommelig maar jy weet waar alles is</span>
-                    </label>
+                    <p class="text-lg font-semibold text-gray-800 mb-3">16. Jou werkruimte is tipies:</p>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q16-a" name="q16" value="A" class="mr-2">
+                        <label for="q16-a" class="text-gray-700">A) Netjies en georganiseer</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q16-b" name="q16" value="B" class="mr-2">
+                        <label for="q16-b" class="text-gray-700">B) 'n Bietjie rommelig, maar jy weet waar alles is</label>
+                    </div>
+                    <div id="q16-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 17 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q17-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">17. Wanneer jy vakansie beplan:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q17" value="A">
-                        <span class="ml-2 text-gray-700">A) Maak jy 'n gedetailleerde roete en besprekings vooraf</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q17" value="B">
-                        <span class="ml-2 text-gray-700">B) Kyk jy wat gebeur en besluit spontaan</span>
-                    </label>
+                    <p class="text-lg font-semibold text-gray-800 mb-3">17. Wanneer jy 'n vakansie beplan, verkies jy:</p>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q17-a" name="q17" value="A" class="mr-2">
+                        <label for="q17-a" class="text-gray-700">A) 'n Gedetailleerde roete en vooraf besprekings</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q17-b" name="q17" value="B" class="mr-2">
+                        <label for="q17-b" class="text-gray-700">B) Om te kyk wat gebeur en spontaan te besluit</label>
+                    </div>
+                    <div id="q17-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 18 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q18-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">18. Jy verkies om te werk:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q18" value="A">
-                        <span class="ml-2 text-gray-700">A) Met duidelike sperdatums en strukture</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q18" value="B">
-                        <span class="ml-2 text-gray-700">B) Met buigsaamheid en oop keuses</span>
-                    </label>
+                    <p class="text-lg font-semibold text-gray-800 mb-3">18. Jy verkies werk wat het:</p>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q18-a" name="q18" value="A" class="mr-2">
+                        <label for="q18-a" class="text-gray-700">A) Duidelike sperdatums en strukture</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q18-b" name="q18" value="B" class="mr-2">
+                        <label for="q18-b" class="text-gray-700">B) Buigsaamheid en oop keuses</label>
+                    </div>
+                    <div id="q18-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 19 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q19-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">19. Wanneer jy 'n taak kry:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q19" value="A">
-                        <span class="ml-2 text-gray-700">A) Begin jy gou sodat jy betyds kan klaarmaak</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q19" value="B">
-                        <span class="ml-2 text-gray-700">B) Werk jy die beste onder druk naby die sperdatum</span>
-                    </label>
+                    <p class="text-lg font-semibold text-gray-800 mb-3">19. Wanneer jy 'n taak benader, jy:</p>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q19-a" name="q19" value="A" class="mr-2">
+                        <label for="q19-a" class="text-gray-700">A) Begin gou om betyds klaar te maak</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q19-b" name="q19" value="B" class="mr-2">
+                        <label for="q19-b" class="text-gray-700">B) Werk die beste onder druk naby die sperdatum</label>
+                    </div>
+                    <div id="q19-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 20 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q20-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">20. Jy voel meer gemaklik wanneer:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q20" value="A">
-                        <span class="ml-2 text-gray-700">A) Planne gemaak is en dinge bepaal is</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q20" value="B">
-                        <span class="ml-2 text-gray-700">B) Opsies oop gehou word vir verandering</span>
-                    </label>
+                    <p class="text-lg font-semibold text-gray-800 mb-3">20. Jy voel die gemaklikste wanneer:</p>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q20-a" name="q20" value="A" class="mr-2">
+                        <label for="q20-a" class="text-gray-700">A) Planne gemaak is en dinge vasgestel is</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q20-b" name="q20" value="B" class="mr-2">
+                        <label for="q20-b" class="text-gray-700">B) Opsies oop gehou word vir verandering</label>
+                    </div>
+                    <div id="q20-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Submit Button -->
                 <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 mt-8">
-                    Dien Analise In
+                    Dien Assessering In
                 </button>
             </form>
 
-            <!-- Results Display Area -->
+            <!-- Results Display Area - This section will now be permanently hidden -->
             <div id="resultsDisplay" class="hidden bg-blue-50 p-6 rounded-lg shadow-md mt-8 text-center">
                 <h3 class="text-2xl font-bold text-blue-800 mb-4">Jou Persoonlikheidstipe:</h3>
                 <p id="personalityType" class="text-4xl font-extrabold text-indigo-700 mb-4"></p>
                 <p id="resultDetails" class="text-lg text-blue-700"></p>
+                <div class="mt-6 text-left">
+                    <h4 class="text-xl font-semibold text-blue-800 mb-2">Oorsig oor Persoonlikheidsvoorkeure:</h4>
+                    <p class="text-lg text-blue-700 mb-2"><strong>E/I (Ekstroversie / Introversie):</strong> Hoe jy energie verkry en verwerk.</p>
+                    <p class="text-lg text-blue-700 mb-2"><strong>S/N (Sensing / Intuïsie):</strong> Hoe jy inligting versamel en interpreteer.</p>
+                    <p class="text-lg text-blue-700 mb-2"><strong>T/F (Dink / Voel):</strong> Hoe jy besluite neem.</p>
+                    <p class="text-lg text-blue-700 mb-2"><strong>J/P (Oordeel / Waarneem):</strong> Hoe jy verkies om jou uiterlike lewe te leef.</p>
+                </div>
             </div>
 
             <!-- Back to Homepage Button -->
@@ -333,190 +401,226 @@
         </div>
     </main>
 
-    <!-- Footer Section - Reusing the same footer structure as index.html -->
+    <!-- Footer Section -->
     <footer class="bg-gray-800 text-white py-6">
         <div class="container mx-auto px-4 text-center">
             <p class="text-sm">&copy; 2025 Jou Besigheid. Alle regte voorbehou.</p>
         </div>
     </footer>
 
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        // Initialize EmailJS with your Public Key
+        (function() {
+            try {
+                emailjs.init("Pmd3fgupxDv25ALjZ"); // Your EmailJS Public Key
+                console.log("EmailJS initialized successfully.");
+            } catch (e) {
+                console.error("Error initializing EmailJS:", e);
+            }
+        })();
+    </script>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('assessmentForm');
-            const resultsDisplay = document.getElementById('resultsDisplay');
-            const personalityTypeElement = document.getElementById('personalityType');
-            const resultDetailsElement = document.getElementById('resultDetails');
+            // resultsDisplay, personalityTypeElement, resultDetailsElement are no longer needed for on-screen display
+            const userNameInput = document.getElementById('userName');
             const questionBlocks = document.querySelectorAll('.question-block');
+            const messageBox = document.getElementById('messageBox'); // Get the message box element
 
-            // Function to find the next unanswered question and scroll to it, applying a subtle highlight
+            // Function to show messages
+            function showMessage(message, type) {
+                console.log('showMessage called:', message, type); // DEBUG: Confirm showMessage is called
+                messageBox.textContent = message;
+                messageBox.className = 'message-box'; // Reset classes
+                messageBox.classList.add(type); // Add success or error class
+                messageBox.style.display = 'block'; // Show the message box
+
+                // Hide message after 5 seconds
+                setTimeout(() => {
+                    messageBox.style.display = 'none';
+                    console.log('Message box hidden.'); // DEBUG: Confirm message box hides
+                }, 5000);
+            }
+
+            // Function to validate if a question is answered
+            function isQuestionAnswered(questionName) {
+                const radios = document.querySelectorAll(`input[name="${questionName}"]:checked`);
+                return radios.length > 0;
+            }
+
+            // Function to display/hide real-time error message for a specific question
+            function updateQuestionError(questionName) {
+                const questionNumber = questionName.replace('q', '');
+                const errorDiv = document.getElementById(`q${questionNumber}-error`);
+                if (!errorDiv) return;
+
+                if (!isQuestionAnswered(questionName)) {
+                    errorDiv.textContent = "Kies asseblief 'n antwoord."; // Afrikaans for "Please select an answer."
+                    errorDiv.classList.remove('hidden');
+                } else {
+                    errorDiv.classList.add('hidden');
+                    errorDiv.textContent = "";
+                }
+            }
+
+            // Function to find the next unanswered question and scroll to it, applying subtle highlight
             function findAndScrollToNextUnanswered() {
-                // Remove subtle highlight from all questions first
                 questionBlocks.forEach(block => {
                     block.classList.remove('next-focus-question');
                 });
 
                 for (let i = 1; i <= 20; i++) {
-                    const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
+                    const questionName = `q${i}`;
                     const questionBlock = document.getElementById(`q${i}-block`);
-
-                    // If a question is unanswered AND not already highlighted in red (from a submission error)
-                    if (!selectedOption && !questionBlock.classList.contains('unanswered-question')) {
-                        questionBlock.classList.add('next-focus-question'); // Apply subtle highlight
+                    if (!isQuestionAnswered(questionName) && !questionBlock.classList.contains('unanswered-question')) {
+                        questionBlock.classList.add('next-focus-question');
                         questionBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        return true; // Found and scrolled
+                        updateQuestionError(questionName); // Show real-time error
+                        return true;
                     }
                 }
-                return false; // No unanswered questions found
+                return false;
             }
 
-            // Function to highlight all unanswered questions in red and scroll to the first one (on submit)
-            function highlightAndScrollToUnansweredOnSubmit() {
-                let firstUnansweredBlock = null;
-                let allAnswered = true;
-
-                // First, remove ALL highlights (both subtle and red)
-                questionBlocks.forEach(block => {
-                    block.classList.remove('unanswered-question', 'next-focus-question');
-                });
-
-                // Iterate through questions to find truly unanswered ones and apply red highlight
-                for (let i = 1; i <= 20; i++) {
-                    const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
-                    const questionBlock = document.getElementById(`q${i}-block`);
-
-                    if (!selectedOption) {
-                        allAnswered = false;
-                        questionBlock.classList.add('unanswered-question'); // Add red highlight
-                        if (!firstUnansweredBlock) {
-                            firstUnansweredBlock = questionBlock; // Mark the first one found
-                        }
-                    }
-                }
-
-                if (!allAnswered) {
-                    // If there are unanswered questions, scroll to the first red one
-                    if (firstUnansweredBlock) {
-                        firstUnansweredBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
-                    return true; // Indicates unanswered questions exist
-                }
-                return false; // All questions are answered
-            }
-
-            // Add change event listeners to all radio buttons for real-time scrolling and subtle highlight
+            // Add change event listeners to all radio buttons for real-time validation and scrolling
             document.querySelectorAll('input[type="radio"]').forEach(radio => {
-                radio.addEventListener('change', () => {
-                    // When a radio button is changed, remove any highlight from its question block
-                    const questionName = radio.name;
-                    const questionNumber = questionName.replace('q', '');
-                    const questionBlock = document.getElementById(`q${questionNumber}-block`);
-                    if (questionBlock) {
-                        questionBlock.classList.remove('unanswered-question', 'next-focus-question');
-                    }
-
-                    // Attempt to scroll to the next unanswered question and apply subtle highlight
-                    findAndScrollToNextUnanswered();
+                radio.addEventListener('change', (event) => {
+                    const questionName = event.target.name;
+                    updateQuestionError(questionName); // Update error for this question
+                    findAndScrollToNextUnanswered(); // Scroll to next unanswered
                 });
             });
 
             form.addEventListener('submit', (event) => {
                 event.preventDefault(); // Prevent default form submission
+                console.log('Form submitted.'); // DEBUG: Confirm form submission event fired
 
-                // When submitting, first highlight all unanswered questions in red and scroll to the first one
-                const hasUnanswered = highlightAndScrollToUnansweredOnSubmit();
+                const userName = userNameInput.value.trim();
+                const userEmail = "info@pulsemap.co.za"; // Hardcoded email for recipient
 
-                if (hasUnanswered) {
-                    // Display an error message if there are unanswered questions
-                    resultsDisplay.classList.remove('hidden', 'bg-blue-50', 'border-blue-400', 'text-blue-700');
-                    resultsDisplay.classList.add('bg-red-100', 'border-red-400', 'text-red-700');
-                    personalityTypeElement.textContent = "Fout!"; // Error in Afrikaans
-                    resultDetailsElement.textContent = "Antwoord asseblief al die gemerkte vrae voordat jy indien."; // Please answer all highlighted questions before submitting.
-                    return; // Stop further processing
+                // Basic validation for name
+                if (!userName) {
+                    showMessage("Voer asseblief jou naam in.", "error"); // Afrikaans for "Please enter your name."
+                    userNameInput.focus();
+                    return;
                 }
+                console.log('Name validated.'); // DEBUG: Confirm validation passed
 
-                // If all questions are answered, hide any previous error message and proceed
-                resultsDisplay.classList.add('hidden');
+                let allQuestionsAnswered = true;
+                let firstUnansweredBlock = null;
 
-                const answers = {};
+                // Clear previous error highlights
+                questionBlocks.forEach(block => {
+                    block.classList.remove('unanswered-question', 'next-focus-question');
+                    const questionNumber = block.id.replace('q', '').replace('-block', '');
+                    const errorDiv = document.getElementById(`q${questionNumber}-error`);
+                    if (errorDiv) {
+                        errorDiv.classList.add('hidden');
+                        errorDiv.textContent = "";
+                    }
+                });
+
+                // Validate all questions and highlight if unanswered
                 for (let i = 1; i <= 20; i++) {
-                    const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
-                    answers[`q${i}`] = selectedOption.value;
-                }
-
-                // Initialize scores
-                let eCount = 0, iCount = 0;
-                let sCount = 0, nCount = 0;
-                let tCount = 0, fCount = 0;
-                let jCount = 0, pCount = 0;
-
-                // Define the mapping from question number to personality dimension and option
-                const questionMapping = {
-                    // E/I (Ekstroversie / Introversie): Vrae 1–5
-                    1: { A: 'E', B: 'I' },
-                    2: { A: 'E', B: 'I' },
-                    3: { A: 'E', B: 'I' },
-                    4: { A: 'E', B: 'I' },
-                    5: { A: 'E', B: 'I' },
-                    // S/N (Sensing / iNtuition): Vrae 6–10
-                    6: { A: 'S', B: 'N' },
-                    7: { A: 'S', B: 'N' },
-                    8: { A: 'S', B: 'N' },
-                    9: { A: 'S', B: 'N' },
-                    10: { A: 'S', B: 'N' },
-                    // T/F (Thinking / Feeling): Vrae 11–15
-                    11: { A: 'T', B: 'F' },
-                    12: { A: 'T', B: 'F' },
-                    13: { A: 'T', B: 'F' },
-                    14: { A: 'T', B: 'F' },
-                    15: { A: 'T', B: 'F' },
-                    // J/P (Judging / Perceiving): Vrae 16–20
-                    16: { A: 'J', B: 'P' },
-                    17: { A: 'J', B: 'P' },
-                    18: { A: 'J', B: 'P' },
-                    19: { A: 'J', B: 'P' },
-                    20: { A: 'J', B: 'P' }
-                };
-
-                // Calculate scores based on answers
-                for (let i = 1; i <= 20; i++) {
-                    const answer = answers[`q${i}`];
-                    const dimensionMap = questionMapping[i];
-
-                    if (dimensionMap) {
-                        const type = dimensionMap[answer];
-                        if (type === 'E') eCount++;
-                        else if (type === 'I') iCount++;
-                        else if (type === 'S') sCount++;
-                        else if (type === 'N') nCount++;
-                        else if (type === 'T') tCount++;
-                        else if (type === 'F') fCount++;
-                        else if (type === 'J') jCount++;
-                        else if (type === 'P') pCount++;
+                    const questionName = `q${i}`;
+                    const questionBlock = document.getElementById(`q${i}-block`);
+                    if (!isQuestionAnswered(questionName)) {
+                        allQuestionsAnswered = false;
+                        questionBlock.classList.add('unanswered-question');
+                        if (!firstUnansweredBlock) {
+                            firstUnansweredBlock = questionBlock;
+                        }
+                        updateQuestionError(questionName); // Show error on submit for unanswered
                     }
                 }
 
-                // Determine personality type
-                let typeEI = eCount >= iCount ? 'E' : 'I'; // If counts are equal, default to E
-                let typeSN = sCount >= nCount ? 'S' : 'N'; // If counts are equal, default to S
-                let typeTF = tCount >= fCount ? 'T' : 'F'; // If counts are equal, default to T
-                let typeJP = jCount >= pCount ? 'J' : 'P'; // If counts are equal, default to J
+                if (!allQuestionsAnswered) {
+                    if (firstUnansweredBlock) {
+                        firstUnansweredBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                    showMessage("Beantwoord asseblief al die vrae voordat u indien.", "error"); // Afrikaans for "Please answer all questions before submitting."
+                    return;
+                }
+                console.log('All questions answered.'); // DEBUG: Confirm all questions are answered
 
-                const finalType = typeEI + typeSN + typeTF + typeJP;
+                // Calculate scores
+                let eScore = 0, iScore = 0;
+                let sScore = 0, nScore = 0;
+                let tScore = 0, fScore = 0;
+                let jScore = 0, pScore = 0;
 
-                // Display results
-                resultsDisplay.classList.remove('hidden', 'bg-red-100', 'border-red-400', 'text-red-700');
-                resultsDisplay.classList.add('bg-blue-50', 'border-blue-400', 'text-blue-700');
-                personalityTypeElement.textContent = finalType;
-                resultDetailsElement.innerHTML = `
-                    <p><strong>E/I (Ekstroversie / Introversie):</strong> ${eCount} Ekstroversie vs. ${iCount} Introversie</p>
-                    <p><strong>S/N (Sensing / iNtuition):</strong> ${sCount} Sensing vs. ${nCount} iNtuition</p>
-                    <p><strong>T/F (Thinking / Feeling):</strong> ${tCount} Thinking vs. ${fCount} Feeling</p>
-                    <p><strong>J/P (Judging / Perceiving):</strong> ${jCount} Judging vs. ${pCount} Perceiving</p>
-                    <p class="mt-4">Jou finale tipe is 'n 4-letter kode, wat jou natuurlike gedragsvoorkeure verteenwoordig.</p>
+                // Mapping from question number to personality dimension
+                const eiQuestions = [1, 2, 3, 4, 5];
+                const snQuestions = [6, 7, 8, 9, 10];
+                const tfQuestions = [11, 12, 13, 14, 15];
+                const jpQuestions = [16, 17, 18, 19, 20];
+
+                // Process each question
+                for (let i = 1; i <= 20; i++) {
+                    const selectedValue = document.querySelector(`input[name="q${i}"]:checked`).value;
+
+                    if (eiQuestions.includes(i)) {
+                        if (selectedValue === 'A') eScore++;
+                        else if (selectedValue === 'B') iScore++;
+                    } else if (snQuestions.includes(i)) {
+                        if (selectedValue === 'A') sScore++;
+                        else if (selectedValue === 'B') nScore++;
+                    } else if (tfQuestions.includes(i)) {
+                        if (selectedValue === 'A') tScore++;
+                        else if (selectedValue === 'B') fScore++;
+                    } else if (jpQuestions.includes(i)) {
+                        if (selectedValue === 'A') jScore++;
+                        else if (selectedValue === 'B') pScore++;
+                    }
+                }
+
+                // Determine personality type letters
+                const ei = eScore > iScore ? 'E' : 'I';
+                const sn = sScore > nScore ? 'S' : 'N';
+                const tf = tScore > fScore ? 'T' : 'F';
+                const jp = jScore > pScore ? 'J' : 'P';
+
+                const personalityType = `${ei}${sn}${tf}${jp}`;
+
+                // Prepare detailed scores HTML for the generic EmailJS template
+                const detailedScoresHtml = `
+                    <ul>
+                        <li><strong>Ekstroversie (E) / Introversie (I):</strong> E: ${eScore}, I: ${iScore}</li>
+                        <li><strong>Sensing (S) / Intuïsie (N):</strong> S: ${sScore}, N: ${nScore}</li>
+                        <li><strong>Dink (T) / Voel (F):</strong> T: ${tScore}, F: ${fScore}</li>
+                        <li><strong>Oordeel (J) / Waarneem (P):</strong> J: ${jScore}, P: ${pScore}</li>
+                    </ul>
                 `;
 
-                // Scroll to results
-                resultsDisplay.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Send email via EmailJS
+                const serviceID = 'service_n3for6s'; // Your EmailJS Service ID
+                const templateID = 'template_kifuzeo'; // Your EmailJS Template ID
+
+                const templateParams = {
+                    user_name: userName,
+                    user_email: userEmail, // This will be your hardcoded email
+                    assessment_name: "Persoonlikheidsgedrag Analise",
+                    main_result: personalityType,
+                    detailed_scores_html: detailedScoresHtml
+                };
+
+                console.log('Attempting to send email with params:', templateParams); // DEBUG: Confirm email send attempt
+                emailjs.send(serviceID, templateID, templateParams)
+                    .then(function(response) {
+                        console.log('EmailJS SUCCESS!', response.status, response.text); // DEBUG: Confirm EmailJS success
+                        showMessage('Jou assessering is suksesvol ingedien!', 'success'); // Afrikaans for "Your assessment has been submitted successfully!"
+                        // Optionally, reset the form after successful submission
+                        form.reset();
+                        userNameInput.value = ''; // Clear name field
+                        // Scroll to the top after submission message
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }, function(error) {
+                        console.log('EmailJS FAILED...', error); // DEBUG: Confirm EmailJS failure
+                        showMessage('Kon assessering nie indien nie. Probeer asseblief weer later.', 'error'); // Afrikaans for "Failed to submit assessment. Please try again later."
+                    });
             });
         });
     </script>
