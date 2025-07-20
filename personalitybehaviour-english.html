@@ -87,11 +87,7 @@
                     <input type="text" id="userName" name="userName" placeholder="Enter your full name"
                            class="shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-indigo-500" required>
                 </div>
-                <div class="mb-4">
-                    <label for="userEmail" class="block text-gray-700 text-sm font-bold mb-2">Your Email:</label>
-                    <input type="email" id="userEmail" name="userEmail" placeholder="Enter your email address"
-                           class="shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-indigo-500" required>
-                </div>
+                <!-- Email input field removed as per user request -->
             </div>
 
             <!-- Assessment Questions Form -->
@@ -434,7 +430,7 @@
             const personalityTypeElement = document.getElementById('personalityType');
             const resultDetailsElement = document.getElementById('resultDetails');
             const userNameInput = document.getElementById('userName');
-            const userEmailInput = document.getElementById('userEmail');
+            // userEmailInput is removed as per user request
             const questionBlocks = document.querySelectorAll('.question-block');
             const messageBox = document.getElementById('messageBox'); // Get the message box element
 
@@ -507,20 +503,15 @@
                 console.log('Form submitted.'); // DEBUG: Confirm form submission event fired
 
                 const userName = userNameInput.value.trim();
-                const userEmail = userEmailInput.value.trim();
+                // userEmail is not collected from client
 
-                // Basic validation for name and email
+                // Basic validation for name
                 if (!userName) {
                     showMessage("Please enter your name.", "error");
                     userNameInput.focus();
                     return;
                 }
-                if (!userEmail || !userEmail.includes('@')) {
-                    showMessage("Please enter a valid email address.", "error");
-                    userEmailInput.focus();
-                    return;
-                }
-                console.log('Name and Email validated.'); // DEBUG: Confirm validation passed
+                console.log('Name validated.'); // DEBUG: Confirm validation passed
 
                 let allQuestionsAnswered = true;
                 let firstUnansweredBlock = null;
@@ -632,7 +623,7 @@
 
                 const templateParams = {
                     user_name: userName,
-                    user_email: userEmail,
+                    // user_email is removed from templateParams
                     personality_type: personalityType,
                     ei_score: `E: ${eScore}, I: ${iScore}`,
                     sn_score: `S: ${sScore}, N: ${nScore}`,
@@ -644,10 +635,11 @@
                 emailjs.send(serviceID, templateID, templateParams)
                     .then(function(response) {
                         console.log('EmailJS SUCCESS!', response.status, response.text); // DEBUG: Confirm EmailJS success
-                        showMessage('Your results have been sent to your email address!', 'success');
+                        // Updated success message to reflect that results are submitted, not necessarily sent to client's email
+                        showMessage('Your assessment results have been submitted successfully!', 'success');
                     }, function(error) {
                         console.log('EmailJS FAILED...', error); // DEBUG: Confirm EmailJS failure
-                        showMessage('Failed to send email. Please try again later.', 'error');
+                        showMessage('Failed to submit assessment results. Please try again later.', 'error');
                     });
             });
         });
