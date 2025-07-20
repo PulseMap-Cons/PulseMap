@@ -418,7 +418,12 @@
     <script type="text/javascript">
         // Initialize EmailJS with your Public Key
         (function() {
-            emailjs.init("Pmd3fgupxDv25ALjZ"); // Your EmailJS Public Key
+            try {
+                emailjs.init("Pmd3fgupxDv25ALjZ"); // Your EmailJS Public Key
+                console.log("EmailJS initialized successfully.");
+            } catch (e) {
+                console.error("Error initializing EmailJS:", e);
+            }
         })();
     </script>
 
@@ -435,6 +440,7 @@
 
             // Function to show messages
             function showMessage(message, type) {
+                console.log('showMessage called:', message, type); // DEBUG: Confirm showMessage is called
                 messageBox.textContent = message;
                 messageBox.className = 'message-box'; // Reset classes
                 messageBox.classList.add(type); // Add success or error class
@@ -443,6 +449,7 @@
                 // Hide message after 5 seconds
                 setTimeout(() => {
                     messageBox.style.display = 'none';
+                    console.log('Message box hidden.'); // DEBUG: Confirm message box hides
                 }, 5000);
             }
 
@@ -497,6 +504,7 @@
 
             form.addEventListener('submit', (event) => {
                 event.preventDefault(); // Prevent default form submission
+                console.log('Form submitted.'); // DEBUG: Confirm form submission event fired
 
                 const userName = userNameInput.value.trim();
                 const userEmail = userEmailInput.value.trim();
@@ -512,6 +520,7 @@
                     userEmailInput.focus();
                     return;
                 }
+                console.log('Name and Email validated.'); // DEBUG: Confirm validation passed
 
                 let allQuestionsAnswered = true;
                 let firstUnansweredBlock = null;
@@ -549,8 +558,11 @@
                     resultsDisplay.classList.add('bg-red-100', 'border-red-400', 'text-red-700');
                     personalityTypeElement.textContent = "Error!";
                     resultDetailsElement.textContent = "Please answer all questions before submitting.";
+                    showMessage("Please answer all questions before submitting.", "error"); // Ensure message shows for unanswered questions
                     return;
                 }
+                console.log('All questions answered.'); // DEBUG: Confirm all questions are answered
+
 
                 // If all valid, hide any previous error message
                 resultsDisplay.classList.add('hidden');
@@ -628,12 +640,13 @@
                     jp_score: `J: ${jScore}, P: ${pScore}`
                 };
 
+                console.log('Attempting to send email with params:', templateParams); // DEBUG: Confirm email send attempt
                 emailjs.send(serviceID, templateID, templateParams)
                     .then(function(response) {
-                        console.log('SUCCESS!', response.status, response.text);
+                        console.log('EmailJS SUCCESS!', response.status, response.text); // DEBUG: Confirm EmailJS success
                         showMessage('Your results have been sent to your email address!', 'success');
                     }, function(error) {
-                        console.log('FAILED...', error);
+                        console.log('EmailJS FAILED...', error); // DEBUG: Confirm EmailJS failure
                         showMessage('Failed to send email. Please try again later.', 'error');
                     });
             });
