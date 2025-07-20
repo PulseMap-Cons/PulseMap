@@ -60,6 +60,11 @@
                     <input type="text" id="userName" name="userName" placeholder="Enter your full name"
                            class="shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-indigo-500" required>
                 </div>
+                <div class="mb-4">
+                    <label for="userEmail" class="block text-gray-700 text-sm font-bold mb-2">Your Email:</label>
+                    <input type="email" id="userEmail" name="userEmail" placeholder="Enter your email address"
+                           class="shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-indigo-500" required>
+                </div>
             </div>
 
             <!-- Assessment Questions Form -->
@@ -381,13 +386,23 @@
         </div>
     </footer>
 
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        // Initialize EmailJS with your Public Key
+        (function() {
+            emailjs.init("Pmd3fgupxDv25ALjZ"); // Your EmailJS Public Key
+        })();
+    </script>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('assessmentForm');
             const resultsDisplay = document.getElementById('resultsDisplay');
             const personalityTypeElement = document.getElementById('personalityType');
             const resultDetailsElement = document.getElementById('resultDetails');
-            const userNameInput = document.getElementById('userName'); // Get name input
+            const userNameInput = document.getElementById('userName');
+            const userEmailInput = document.getElementById('userEmail'); // Re-added email input
             const questionBlocks = document.querySelectorAll('.question-block');
 
             // Function to validate if a question is answered
@@ -443,11 +458,17 @@
                 event.preventDefault(); // Prevent default form submission
 
                 const userName = userNameInput.value.trim();
+                const userEmail = userEmailInput.value.trim(); // Get email input value
 
-                // Basic validation for name
+                // Basic validation for name and email
                 if (!userName) {
                     alert("Please enter your name."); // Using alert for simplicity, consider custom modal for production
                     userNameInput.focus();
+                    return;
+                }
+                if (!userEmail || !userEmail.includes('@')) {
+                    alert("Please enter a valid email address."); // Using alert for simplicity
+                    userEmailInput.focus();
                     return;
                 }
 
@@ -552,7 +573,30 @@
                 // Scroll to results
                 resultsDisplay.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-                // Removed EmailJS sending logic as per user request
+                // Send email via EmailJS
+                const serviceID = 'service_n3for6s'; // Your EmailJS Service ID
+                const templateID = 'template_kifuzeo'; // Your EmailJS Template ID
+
+                const templateParams = {
+                    user_name: userName,
+                    user_email: userEmail,
+                    personality_type: personalityType,
+                    ei_score: `E: ${eScore}, I: ${iScore}`,
+                    sn_score: `S: ${sScore}, N: ${nScore}`,
+                    tf_score: `T: ${tScore}, F: ${fScore}`,
+                    jp_score: `J: ${jScore}, P: ${pScore}`
+                };
+
+                emailjs.send(serviceID, templateID, templateParams)
+                    .then(function(response) {
+                        console.log('SUCCESS!', response.status, response.text);
+                        // Optionally, show a success message to the user
+                        // alert('Your results have been sent to your email address!');
+                    }, function(error) {
+                        console.log('FAILED...', error);
+                        // Optionally, show an error message to the user
+                        // alert('Failed to send email. Please try again later.');
+                    });
             });
         });
     </script>
