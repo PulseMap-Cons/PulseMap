@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personality Behaviour Assessment - English</title>
+    <title>Personality Behaviour Analysis - English</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -21,10 +21,17 @@
             border: 2px solid #f97316; /* Orange border */
             background-color: #fff7ed; /* Light orange background */
         }
+        /* Style for real-time error message */
+        .question-error-message {
+            color: #dc2626; /* Red text */
+            font-size: 0.875rem; /* text-sm */
+            margin-top: 0.5rem;
+            text-align: left;
+        }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
-    <!-- Header Section - Reusing the same header structure as index.html -->
+    <!-- Header Section -->
     <header class="bg-white shadow-md py-4">
         <div class="container mx-auto px-4 flex justify-center items-center">
             <!-- Business Logo as Title -->
@@ -36,280 +43,306 @@
     <main class="flex-grow container mx-auto px-4 py-8 flex flex-col items-center justify-center">
         <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-2xl text-center">
             <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 mb-4 leading-tight">
-                Personality Behaviour Assessment
+                Personality Behaviour Analysis
             </h1>
             <h2 class="text-2xl md:text-3xl font-semibold text-indigo-600 mb-6">
                 English Version
             </h2>
             <p class="text-lg text-gray-700 mb-8 text-left">
-                Welcome to the Personality Behaviour Assessment. This questionnaire is designed to help you understand your natural preferences and how you interact with the world around you. Please answer honestly, as there are no right or wrong answers. Your responses will provide valuable insights into your unique functioning style.
+                Welcome to the Personality Behaviour Analysis. Answer each question by choosing the option that best describes you. Each answer contributes to one of the personality preference dimensions. Your responses will help provide insights into your unique personality profile.
             </p>
+
+            <!-- User Information Form -->
+            <div class="mb-8 p-6 bg-blue-50 rounded-lg shadow-inner text-left">
+                <h3 class="text-xl font-semibold text-blue-800 mb-4">Your Details</h3>
+                <div class="mb-4">
+                    <label for="userName" class="block text-gray-700 text-sm font-bold mb-2">Your Name:</label>
+                    <input type="text" id="userName" name="userName" placeholder="Enter your full name"
+                           class="shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-indigo-500" required>
+                </div>
+            </div>
 
             <!-- Assessment Questions Form -->
             <form id="assessmentForm" class="border-t border-gray-200 pt-8 mt-8 text-left">
+
                 <!-- Question 1 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q1-block">
                     <p class="text-lg font-semibold text-gray-800 mb-3">1. When you are stressed, what helps you most?</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q1" value="A">
-                        <span class="ml-2 text-gray-700">A) Talking to friends or family about it</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q1" value="B">
-                        <span class="ml-2 text-gray-700">B) Taking time alone to think and process</span>
-                    </label>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q1-a" name="q1" value="A" class="mr-2">
+                        <label for="q1-a" class="text-gray-700">A) Talking to friends or family about it</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q1-b" name="q1" value="B" class="mr-2">
+                        <label for="q1-b" class="text-gray-700">B) Taking time alone to think and process</label>
+                    </div>
+                    <div id="q1-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 2 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q2-block">
                     <p class="text-lg font-semibold text-gray-800 mb-3">2. At a party or social event:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q2" value="A">
-                        <span class="ml-2 text-gray-700">A) You chat with lots of people and feel energized</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q2" value="B">
-                        <span class="ml-2 text-gray-700">B) You stick with a few people and feel drained after a while</span>
-                    </label>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q2-a" name="q2" value="A" class="mr-2">
+                        <label for="q2-a" class="text-gray-700">A) You chat with lots of people and feel energized</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q2-b" name="q2" value="B" class="mr-2">
+                        <label for="q2-b" class="text-gray-700">B) You stick with a few people and feel drained after a while</label>
+                    </div>
+                    <div id="q2-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 3 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q3-block">
                     <p class="text-lg font-semibold text-gray-800 mb-3">3. When solving a problem:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q3" value="A">
-                        <span class="ml-2 text-gray-700">A) You think out loud and discuss it with others</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q3" value="B">
-                        <span class="ml-2 text-gray-700">B) You think it through thoroughly before sharing</span>
-                    </label>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q3-a" name="q3" value="A" class="mr-2">
+                        <label for="q3-a" class="text-gray-700">A) You think out loud and discuss it with others</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q3-b" name="q3" value="B" class="mr-2">
+                        <label for="q3-b" class="text-gray-700">B) You think it through thoroughly before sharing</label>
+                    </div>
+                    <div id="q3-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 4 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q4-block">
                     <p class="text-lg font-semibold text-gray-800 mb-3">4. Your ideal weekend would be:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q4" value="A">
-                        <span class="ml-2 text-gray-700">A) Various activities with friends and family</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q4" value="B">
-                        <span class="ml-2 text-gray-700">B) Quiet time at home with a good book or hobby</span>
-                    </label>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q4-a" name="q4" value="A" class="mr-2">
+                        <label for="q4-a" class="text-gray-700">A) Various activities with friends and family</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q4-b" name="q4" value="B" class="mr-2">
+                        <label for="q4-b" class="text-gray-700">B) Quiet time at home with a good book or hobby</label>
+                    </div>
+                    <div id="q4-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 5 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q5-block">
                     <p class="text-lg font-semibold text-gray-800 mb-3">5. When meeting new people:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q5" value="A">
-                        <span class="ml-2 text-gray-700">A) You're comfortable initiating conversation</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q5" value="B">
-                        <span class="ml-2 text-gray-700">B) You prefer them to make the first move</span>
-                    </label>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q5-a" name="q5" value="A" class="mr-2">
+                        <label for="q5-a" class="text-gray-700">A) You're comfortable initiating conversation</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q5-b" name="q5" value="B" class="mr-2">
+                        <label for="q5-b" class="text-gray-700">B) You prefer them to make the first move</label>
+                    </div>
+                    <div id="q5-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 6 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q6-block">
                     <p class="text-lg font-semibold text-gray-800 mb-3">6. When starting a new project:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q6" value="A">
-                        <span class="ml-2 text-gray-700">A) You begin with concrete steps and practical details</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q6" value="B">
-                        <span class="ml-2 text-gray-700">B) You start with the big picture and possibilities</span>
-                    </label>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q6-a" name="q6" value="A" class="mr-2">
+                        <label for="q6-a" class="text-gray-700">A) You begin with concrete steps and practical details</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q6-b" name="q6" value="B" class="mr-2">
+                        <label for="q6-b" class="text-gray-700">B) You start with the big picture and possibilities</label>
+                    </div>
+                    <div id="q6-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 7 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q7-block">
                     <p class="text-lg font-semibold text-gray-800 mb-3">7. You prefer instructions that:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q7" value="A">
-                        <span class="ml-2 text-gray-700">A) Are step-by-step and specific</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q7" value="B">
-                        <span class="ml-2 text-gray-700">B) Explain the goal so you can find your own way</span>
-                    </label>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q7-a" name="q7" value="A" class="mr-2">
+                        <label for="q7-a" class="text-gray-700">A) Are step-by-step and specific</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q7-b" name="q7" value="B" class="mr-2">
+                        <label for="q7-b" class="text-gray-700">B) Explain the goal so you can find your own way</label>
+                    </div>
+                    <div id="q7-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 8 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q8-block">
                     <p class="text-lg font-semibold text-gray-800 mb-3">8. When telling a story:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q8" value="A">
-                        <span class="ml-2 text-gray-700">A) You include accurate facts and details</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q8" value="B">
-                        <span class="ml-2 text-gray-700">B) You focus on the meaning and emotional impact</span>
-                    </label>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q8-a" name="q8" value="A" class="mr-2">
+                        <label for="q8-a" class="text-gray-700">A) You include accurate facts and details</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q8-b" name="q8" value="B" class="mr-2">
+                        <label for="q8-b" class="text-gray-700">B) You focus on the meaning and emotional impact</label>
+                    </div>
+                    <div id="q8-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 9 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q9-block">
                     <p class="text-lg font-semibold text-gray-800 mb-3">9. You find it more interesting to talk about:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q9" value="A">
-                        <span class="ml-2 text-gray-700">A) Practical matters and real-life experiences</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q9" value="B">
-                        <span class="ml-2 text-gray-700">B) Ideas, theories, and future possibilities</span>
-                    </label>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q9-a" name="q9" value="A" class="mr-2">
+                        <label for="q9-a" class="text-gray-700">A) Practical matters and real-life experiences</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q9-b" name="q9" value="B" class="mr-2">
+                        <label for="q9-b" class="text-gray-700">B) Ideas, theories, and future possibilities</label>
+                    </div>
+                    <div id="q9-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 10 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q10-block">
                     <p class="text-lg font-semibold text-gray-800 mb-3">10. When making a decision, you usually:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q10" value="A">
-                        <span class="ml-2 text-gray-700">A) Rely on what worked in the past</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q10" value="B">
-                        <span class="ml-2 text-gray-700">B) Explore new and innovative options</span>
-                    </label>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q10-a" name="q10" value="A" class="mr-2">
+                        <label for="q10-a" class="text-gray-700">A) Rely on what worked in the past</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q10-b" name="q10" value="B" class="mr-2">
+                        <label for="q10-b" class="text-gray-700">B) Explore new and innovative options</label>
+                    </div>
+                    <div id="q10-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 11 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q11-block">
                     <p class="text-lg font-semibold text-gray-800 mb-3">11. When resolving conflict:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q11" value="A">
-                        <span class="ml-2 text-gray-700">A) You focus on facts and logical solutions</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q11" value="B">
-                        <span class="ml-2 text-gray-700">B) You consider how everyone might feel</span>
-                    </label>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q11-a" name="q11" value="A" class="mr-2">
+                        <label for="q11-a" class="text-gray-700">A) You focus on facts and logical solutions</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q11-b" name="q11" value="B" class="mr-2">
+                        <label for="q11-b" class="text-gray-700">B) You focus on people's feelings and relationships</label>
+                    </div>
+                    <div id="q11-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 12 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q12-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">12. You make decisions mainly based on:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q12" value="A">
-                        <span class="ml-2 text-gray-700">A) What is logical and effective</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q12" value="B">
-                        <span class="ml-2 text-gray-700">B) What aligns with your values and others’ needs</span>
-                    </label>
+                    <p class="text-lg font-semibold text-gray-800 mb-3">12. When making a decision, you prioritize:</p>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q12-a" name="q12" value="A" class="mr-2">
+                        <label for="q12-a" class="text-gray-700">A) Objective analysis and consistency</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q12-b" name="q12" value="B" class="mr-2">
+                        <label for="q12-b" class="text-gray-700">B) Personal values and impact on people</label>
+                    </div>
+                    <div id="q12-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 13 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q13-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">13. When giving criticism:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q13" value="A">
-                        <span class="ml-2 text-gray-700">A) You are direct and focus on improvement</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q13" value="B">
-                        <span class="ml-2 text-gray-700">B) You try to soften it to avoid hurting feelings</span>
-                    </label>
+                    <p class="text-lg font-semibold text-gray-800 mb-3">13. When giving feedback, you tend to be:</p>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q13-a" name="q13" value="A" class="mr-2">
+                        <label for="q13-a" class="text-gray-700">A) Direct and honest, even if it's difficult</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q13-b" name="q13" value="B" class="mr-2">
+                        <label for="q13-b" class="text-gray-700">B) Gentle and diplomatic, to protect feelings</label>
+                    </div>
+                    <div id="q13-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 14 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q14-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">14. You appreciate people who are:</p>
-                    <!-- Changed to block-level elements for vertical stacking -->
-                    <div class="mb-2">
-                        <label class="inline-flex items-center cursor-pointer">
-                            <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q14" value="A">
-                            <span class="ml-2 text-gray-700">A) Fair and consistent</span>
-                        </label>
+                    <p class="text-lg font-semibold text-gray-800 mb-3">14. You value people who are:</p>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q14-a" name="q14" value="A" class="mr-2">
+                        <label for="q14-a" class="text-gray-700">A) Fair and consistent</label>
                     </div>
-                    <div>
-                        <label class="inline-flex items-center cursor-pointer">
-                            <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q14" value="B">
-                            <span class="ml-2 text-gray-700">B) Empathetic and understanding</span>
-                        </label>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q14-b" name="q14" value="B" class="mr-2">
+                        <label for="q14-b" class="text-gray-700">B) Empathetic and understanding</label>
                     </div>
+                    <div id="q14-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 15 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q15-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">15. In a team setting:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q15" value="A">
-                        <span class="ml-2 text-gray-700">A) You focus on efficiency and results</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q15" value="B">
-                        <span class="ml-2 text-gray-700">B) You make sure everyone feels included and valued</span>
-                    </label>
+                    <p class="text-lg font-semibold text-gray-800 mb-3">15. In a team environment, you focus on:</p>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q15-a" name="q15" value="A" class="mr-2">
+                        <label for="q15-a" class="text-gray-700">A) Efficiency and achieving results</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q15-b" name="q15" value="B" class="mr-2">
+                        <label for="q15-b" class="text-gray-700">B) Ensuring everyone feels included and valued</label>
+                    </div>
+                    <div id="q15-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 16 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q16-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">16. Your workspace is usually:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q16" value="A">
-                        <span class="ml-2 text-gray-700">A) Tidy and organized</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q16" value="B">
-                        <span class="ml-2 text-gray-700">B) A bit messy, but you know where everything is</span>
-                    </label>
+                    <p class="text-lg font-semibold text-gray-800 mb-3">16. Your workspace is typically:</p>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q16-a" name="q16" value="A" class="mr-2">
+                        <label for="q16-a" class="text-gray-700">A) Neat and organized</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q16-b" name="q16" value="B" class="mr-2">
+                        <label for="q16-b" class="text-gray-700">B) A bit messy, but you know where everything is</label>
+                    </div>
+                    <div id="q16-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 17 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q17-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">17. When planning a holiday:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q17" value="A">
-                        <span class="ml-2 text-gray-700">A) You create a detailed itinerary and book ahead</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q17" value="B">
-                        <span class="ml-2 text-gray-700">B) You go with the flow and decide spontaneously</span>
-                    </label>
+                    <p class="text-lg font-semibold text-gray-800 mb-3">17. When planning a vacation, you prefer:</p>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q17-a" name="q17" value="A" class="mr-2">
+                        <label for="q17-a" class="text-gray-700">A) A detailed itinerary and advance bookings</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q17-b" name="q17" value="B" class="mr-2">
+                        <label for="q17-b" class="text-gray-700">B) To see what happens and decide spontaneously</label>
+                    </div>
+                    <div id="q17-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 18 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q18-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">18. You prefer to work:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q18" value="A">
-                        <span class="ml-2 text-gray-700">A) With clear deadlines and structure</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q18" value="B">
-                        <span class="ml-2 text-gray-700">B) With flexibility and open-ended options</span>
-                    </label>
+                    <p class="text-lg font-semibold text-gray-800 mb-3">18. You prefer work that has:</p>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q18-a" name="q18" value="A" class="mr-2">
+                        <label for="q18-a" class="text-gray-700">A) Clear deadlines and structures</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q18-b" name="q18" value="B" class="mr-2">
+                        <label for="q18-b" class="text-gray-700">B) Flexibility and open-ended options</label>
+                    </div>
+                    <div id="q18-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 19 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q19-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">19. When given a task:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q19" value="A">
-                        <span class="ml-2 text-gray-700">A) You start early to finish on time</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q19" value="B">
-                        <span class="ml-2 text-gray-700">B) You work best under pressure close to the deadline</span>
-                    </label>
+                    <p class="text-lg font-semibold text-gray-800 mb-3">19. When approaching a task, you:</p>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q19-a" name="q19" value="A" class="mr-2">
+                        <label for="q19-a" class="text-gray-700">A) Start early to finish on time</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q19-b" name="q19" value="B" class="mr-2">
+                        <label for="q19-b" class="text-gray-700">B) Work best under pressure closer to the deadline</label>
+                    </div>
+                    <div id="q19-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Question 20 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q20-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">20. You feel more comfortable when:</p>
-                    <label class="inline-flex items-center mr-6 mb-2 cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q20" value="A">
-                        <span class="ml-2 text-gray-700">A) Plans are made and things are decided</span>
-                    </label>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" class="form-radio h-5 w-5 text-indigo-600" name="q20" value="B">
-                        <span class="ml-2 text-gray-700">B) Options are open for change</span>
-                    </label>
+                    <p class="text-lg font-semibold text-gray-800 mb-3">20. You feel most comfortable when:</p>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q20-a" name="q20" value="A" class="mr-2">
+                        <label for="q20-a" class="text-gray-700">A) Plans are made and things are settled</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q20-b" name="q20" value="B" class="mr-2">
+                        <label for="q20-b" class="text-gray-700">B) Options are kept open for change</label>
+                    </div>
+                    <div id="q20-error" class="question-error-message hidden"></div>
                 </div>
 
                 <!-- Submit Button -->
@@ -323,6 +356,13 @@
                 <h3 class="text-2xl font-bold text-blue-800 mb-4">Your Personality Type:</h3>
                 <p id="personalityType" class="text-4xl font-extrabold text-indigo-700 mb-4"></p>
                 <p id="resultDetails" class="text-lg text-blue-700"></p>
+                <div class="mt-6 text-left">
+                    <h4 class="text-xl font-semibold text-blue-800 mb-2">Personality Preference Overview:</h4>
+                    <p class="text-lg text-blue-700 mb-2"><strong>E/I (Extraversion / Introversion):</strong> How you gain and process energy.</p>
+                    <p class="text-lg text-blue-700 mb-2"><strong>S/N (Sensing / Intuition):</strong> How you gather and interpret information.</p>
+                    <p class="text-lg text-blue-700 mb-2"><strong>T/F (Thinking / Feeling):</strong> How you make decisions.</p>
+                    <p class="text-lg text-blue-700 mb-2"><strong>J/P (Judging / Perceiving):</strong> How you prefer to live your outer life.</p>
+                </div>
             </div>
 
             <!-- Back to Homepage Button -->
@@ -334,7 +374,7 @@
         </div>
     </main>
 
-    <!-- Footer Section - Reusing the same footer structure as index.html -->
+    <!-- Footer Section -->
     <footer class="bg-gray-800 text-white py-6">
         <div class="container mx-auto px-4 text-center">
             <p class="text-sm">&copy; 2025 Your Business. All rights reserved.</p>
@@ -347,177 +387,172 @@
             const resultsDisplay = document.getElementById('resultsDisplay');
             const personalityTypeElement = document.getElementById('personalityType');
             const resultDetailsElement = document.getElementById('resultDetails');
+            const userNameInput = document.getElementById('userName'); // Get name input
             const questionBlocks = document.querySelectorAll('.question-block');
 
-            // Function to find the next unanswered question and scroll to it, applying a subtle highlight
+            // Function to validate if a question is answered
+            function isQuestionAnswered(questionName) {
+                const radios = document.querySelectorAll(`input[name="${questionName}"]:checked`);
+                return radios.length > 0;
+            }
+
+            // Function to display/hide real-time error message for a specific question
+            function updateQuestionError(questionName) {
+                const questionNumber = questionName.replace('q', '');
+                const errorDiv = document.getElementById(`q${questionNumber}-error`);
+                if (!errorDiv) return;
+
+                if (!isQuestionAnswered(questionName)) {
+                    errorDiv.textContent = "Please select an answer.";
+                    errorDiv.classList.remove('hidden');
+                } else {
+                    errorDiv.classList.add('hidden');
+                    errorDiv.textContent = "";
+                }
+            }
+
+            // Function to find the next unanswered question and scroll to it, applying subtle highlight
             function findAndScrollToNextUnanswered() {
-                // Remove subtle highlight from all questions first
                 questionBlocks.forEach(block => {
                     block.classList.remove('next-focus-question');
                 });
 
                 for (let i = 1; i <= 20; i++) {
-                    const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
+                    const questionName = `q${i}`;
                     const questionBlock = document.getElementById(`q${i}-block`);
-
-                    // If a question is unanswered AND not already highlighted in red (from a submission error)
-                    if (!selectedOption && !questionBlock.classList.contains('unanswered-question')) {
-                        questionBlock.classList.add('next-focus-question'); // Apply subtle highlight
+                    if (!isQuestionAnswered(questionName) && !questionBlock.classList.contains('unanswered-question')) {
+                        questionBlock.classList.add('next-focus-question');
                         questionBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        return true; // Found and scrolled
+                        updateQuestionError(questionName); // Show real-time error
+                        return true;
                     }
                 }
-                return false; // No unanswered questions found
+                return false;
             }
 
-            // Function to highlight all unanswered questions in red and scroll to the first one (on submit)
-            function highlightAndScrollToUnansweredOnSubmit() {
-                let firstUnansweredBlock = null;
-                let allAnswered = true;
-
-                // First, remove ALL highlights (both subtle and red)
-                questionBlocks.forEach(block => {
-                    block.classList.remove('unanswered-question', 'next-focus-question');
-                });
-
-                // Iterate through questions to find truly unanswered ones and apply red highlight
-                for (let i = 1; i <= 20; i++) {
-                    const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
-                    const questionBlock = document.getElementById(`q${i}-block`);
-
-                    if (!selectedOption) {
-                        allAnswered = false;
-                        questionBlock.classList.add('unanswered-question'); // Add red highlight
-                        if (!firstUnansweredBlock) {
-                            firstUnansweredBlock = questionBlock; // Mark the first one found
-                        }
-                    }
-                }
-
-                if (!allAnswered) {
-                    // If there are unanswered questions, scroll to the first red one
-                    if (firstUnansweredBlock) {
-                        firstUnansweredBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
-                    return true; // Indicates unanswered questions exist
-                }
-                return false; // All questions are answered
-            }
-
-            // Add change event listeners to all radio buttons for real-time scrolling and subtle highlight
+            // Add change event listeners to all radio buttons for real-time validation and scrolling
             document.querySelectorAll('input[type="radio"]').forEach(radio => {
-                radio.addEventListener('change', () => {
-                    // When a radio button is changed, remove any highlight from its question block
-                    const questionName = radio.name;
-                    const questionNumber = questionName.replace('q', '');
-                    const questionBlock = document.getElementById(`q${questionNumber}-block`);
-                    if (questionBlock) {
-                        questionBlock.classList.remove('unanswered-question', 'next-focus-question');
-                    }
-
-                    // Attempt to scroll to the next unanswered question and apply subtle highlight
-                    findAndScrollToNextUnanswered();
+                radio.addEventListener('change', (event) => {
+                    const questionName = event.target.name;
+                    updateQuestionError(questionName); // Update error for this question
+                    findAndScrollToNextUnanswered(); // Scroll to next unanswered
                 });
             });
 
             form.addEventListener('submit', (event) => {
                 event.preventDefault(); // Prevent default form submission
 
-                // When submitting, first highlight all unanswered questions in red and scroll to the first one
-                const hasUnanswered = highlightAndScrollToUnansweredOnSubmit();
+                const userName = userNameInput.value.trim();
 
-                if (hasUnanswered) {
-                    // Display an error message if there are unanswered questions
-                    resultsDisplay.classList.remove('hidden', 'bg-blue-50', 'border-blue-400', 'text-blue-700');
-                    resultsDisplay.classList.add('bg-red-100', 'border-red-400', 'text-red-700');
-                    personalityTypeElement.textContent = "Error!";
-                    resultDetailsElement.textContent = "Please answer all highlighted questions before submitting.";
-                    return; // Stop further processing
+                // Basic validation for name
+                if (!userName) {
+                    alert("Please enter your name."); // Using alert for simplicity, consider custom modal for production
+                    userNameInput.focus();
+                    return;
                 }
 
-                // If all questions are answered, hide any previous error message and proceed
-                resultsDisplay.classList.add('hidden');
+                let allQuestionsAnswered = true;
+                let firstUnansweredBlock = null;
 
-                const answers = {};
+                // Clear previous error highlights
+                questionBlocks.forEach(block => {
+                    block.classList.remove('unanswered-question', 'next-focus-question');
+                    const questionNumber = block.id.replace('q', '').replace('-block', '');
+                    const errorDiv = document.getElementById(`q${questionNumber}-error`);
+                    if (errorDiv) {
+                        errorDiv.classList.add('hidden');
+                        errorDiv.textContent = "";
+                    }
+                });
+
+                // Validate all questions and highlight if unanswered
                 for (let i = 1; i <= 20; i++) {
-                    const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
-                    answers[`q${i}`] = selectedOption.value;
-                }
-
-                // Initialize scores
-                let eCount = 0, iCount = 0;
-                let sCount = 0, nCount = 0;
-                let tCount = 0, fCount = 0;
-                let jCount = 0, pCount = 0;
-
-                // Define the mapping from question number to personality dimension and option
-                const questionMapping = {
-                    // E/I (Extraversion / Introversion): Questions 1–5
-                    1: { A: 'E', B: 'I' },
-                    2: { A: 'E', B: 'I' },
-                    3: { A: 'E', B: 'I' },
-                    4: { A: 'E', B: 'I' },
-                    5: { A: 'E', B: 'I' },
-                    // S/N (Sensing / Intuition): Questions 6–10
-                    6: { A: 'S', B: 'N' },
-                    7: { A: 'S', B: 'N' },
-                    8: { A: 'S', B: 'N' },
-                    9: { A: 'S', B: 'N' },
-                    10: { A: 'S', B: 'N' },
-                    // T/F (Thinking / Feeling): Questions 11–15
-                    11: { A: 'T', B: 'F' },
-                    12: { A: 'T', B: 'F' },
-                    13: { A: 'T', B: 'F' },
-                    14: { A: 'T', B: 'F' },
-                    15: { A: 'T', B: 'F' },
-                    // J/P (Judging / Perceiving): Questions 16–20
-                    16: { A: 'J', B: 'P' },
-                    17: { A: 'J', B: 'P' },
-                    18: { A: 'J', B: 'P' },
-                    19: { A: 'J', B: 'P' },
-                    20: { A: 'J', B: 'P' }
-                };
-
-                // Calculate scores based on answers
-                for (let i = 1; i <= 20; i++) {
-                    const answer = answers[`q${i}`];
-                    const dimensionMap = questionMapping[i];
-
-                    if (dimensionMap) {
-                        const type = dimensionMap[answer];
-                        if (type === 'E') eCount++;
-                        else if (type === 'I') iCount++;
-                        else if (type === 'S') sCount++;
-                        else if (type === 'N') nCount++;
-                        else if (type === 'T') tCount++;
-                        else if (type === 'F') fCount++;
-                        else if (type === 'J') jCount++;
-                        else if (type === 'P') pCount++;
+                    const questionName = `q${i}`;
+                    const questionBlock = document.getElementById(`q${i}-block`);
+                    if (!isQuestionAnswered(questionName)) {
+                        allQuestionsAnswered = false;
+                        questionBlock.classList.add('unanswered-question');
+                        if (!firstUnansweredBlock) {
+                            firstUnansweredBlock = questionBlock;
+                        }
+                        updateQuestionError(questionName); // Show error on submit for unanswered
                     }
                 }
 
-                // Determine personality type
-                let typeEI = eCount >= iCount ? 'E' : 'I'; // If counts are equal, default to E
-                let typeSN = sCount >= nCount ? 'S' : 'N'; // If counts are equal, default to S
-                let typeTF = tCount >= fCount ? 'T' : 'F'; // If counts are equal, default to T
-                let typeJP = jCount >= pCount ? 'J' : 'P'; // If counts are equal, default to J
+                if (!allQuestionsAnswered) {
+                    if (firstUnansweredBlock) {
+                        firstUnansweredBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                    resultsDisplay.classList.remove('hidden', 'bg-blue-50', 'border-blue-400', 'text-blue-700');
+                    resultsDisplay.classList.add('bg-red-100', 'border-red-400', 'text-red-700');
+                    personalityTypeElement.textContent = "Error!";
+                    resultDetailsElement.textContent = "Please answer all questions before submitting.";
+                    return;
+                }
 
-                const finalType = typeEI + typeSN + typeTF + typeJP;
+                // If all valid, hide any previous error message
+                resultsDisplay.classList.add('hidden');
+
+                // Calculate scores
+                let eScore = 0, iScore = 0;
+                let sScore = 0, nScore = 0;
+                let tScore = 0, fScore = 0;
+                let jScore = 0, pScore = 0;
+
+                // Mapping from question number to personality dimension
+                const eiQuestions = [1, 2, 3, 4, 5];
+                const snQuestions = [6, 7, 8, 9, 10];
+                const tfQuestions = [11, 12, 13, 14, 15];
+                const jpQuestions = [16, 17, 18, 19, 20];
+
+                // Process each question
+                for (let i = 1; i <= 20; i++) {
+                    const selectedValue = document.querySelector(`input[name="q${i}"]:checked`).value;
+
+                    if (eiQuestions.includes(i)) {
+                        if (selectedValue === 'A') eScore++;
+                        else if (selectedValue === 'B') iScore++;
+                    } else if (snQuestions.includes(i)) {
+                        if (selectedValue === 'A') sScore++;
+                        else if (selectedValue === 'B') nScore++;
+                    } else if (tfQuestions.includes(i)) {
+                        if (selectedValue === 'A') tScore++;
+                        else if (selectedValue === 'B') fScore++;
+                    } else if (jpQuestions.includes(i)) {
+                        if (selectedValue === 'A') jScore++;
+                        else if (selectedValue === 'B') pScore++;
+                    }
+                }
+
+                // Determine personality type letters
+                const ei = eScore > iScore ? 'E' : 'I';
+                const sn = sScore > nScore ? 'S' : 'N';
+                const tf = tScore > fScore ? 'T' : 'F';
+                const jp = jScore > pScore ? 'J' : 'P';
+
+                const personalityType = `${ei}${sn}${tf}${jp}`;
 
                 // Display results
                 resultsDisplay.classList.remove('hidden', 'bg-red-100', 'border-red-400', 'text-red-700');
                 resultsDisplay.classList.add('bg-blue-50', 'border-blue-400', 'text-blue-700');
-                personalityTypeElement.textContent = finalType;
-                resultDetailsElement.innerHTML = `
-                    <p><strong>E/I (Extraversion / Introversion):</strong> ${eCount} Extraversion vs. ${iCount} Introversion</p>
-                    <p><strong>S/N (Sensing / Intuition):</strong> ${sCount} Sensing vs. ${nCount} Intuition</p>
-                    <p><strong>T/F (Thinking / Feeling):</strong> ${tCount} Thinking vs. ${fCount} Feeling</p>
-                    <p><strong>J/P (Judging / Perceiving):</strong> ${jCount} Judging vs. ${pCount} Perceiving</p>
-                    <p class="mt-4">Your final type is a 4-letter code, representing your natural behavioral preferences.</p>
+                personalityTypeElement.textContent = personalityType;
+                resultDetailsElement.innerHTML = `<p>Based on your answers, your personality type is <strong>${personalityType}</strong>.</p>`;
+
+                // Add detailed scores
+                resultDetailsElement.innerHTML += `
+                    <p class="mt-4"><strong>Detailed Scores:</strong></p>
+                    <ul class="list-disc list-inside mx-auto max-w-md">
+                        <li><strong>Extraversion (E) / Introversion (I):</strong> E: ${eScore}, I: ${iScore}</li>
+                        <li><strong>Sensing (S) / Intuition (N):</strong> S: ${sScore}, N: ${nScore}</li>
+                        <li><strong>Thinking (T) / Feeling (F):</strong> T: ${tScore}, F: ${fScore}</li>
+                        <li><strong>Judging (J) / Perceiving (P):</strong> J: ${jScore}, P: ${pScore}</li>
+                    </ul>
                 `;
 
                 // Scroll to results
                 resultsDisplay.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                // Removed EmailJS sending logic as per user request
             });
         });
     </script>
