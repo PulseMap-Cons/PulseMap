@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Functioning Style Assessment - English</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom CSS for the Inter font */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Red highlight for unanswered questions on submission error */
+        .unanswered-question {
+            border: 2px solid #ef4444; /* Red border */
+            background-color: #fef2f2; /* Light red background */
+        }
+        /* Subtle highlight for the next question to focus on during filling */
+        .next-focus-question {
+            border: 2px solid #f97316; /* Orange border */
+            background-color: #fff7ed; /* Light orange background */
+        }
+        /* Style for disabled select options (though not dynamically disabled by JS anymore) */
+        .rank-select option:disabled {
+            color: #ccc;
+        }
+        /* Style for real-time error message */
+        .question-error-message {
+            color: #dc2626; /* Red text */
+            font-size: 0.875rem; /* text-sm */
+            margin-top: 0.5rem;
+            text-align: left;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <!-- Header Section - Reusing the same header structure as index.html -->
+    <header class="bg-white shadow-md py-4">
+        <div class="container mx-auto px-4 flex justify-center items-center">
+            <!-- Business Logo as Title -->
+            <img src="https://i.imgur.com/Zx34Iky.png" alt="Your Business Logo" class="h-24 sm:h-32 md:h-40 w-full object-contain rounded-lg shadow-sm">
+        </div>
+    </header>
+
+    <!-- Main Content Section for the Assessment -->
+    <main class="flex-grow container mx-auto px-4 py-8 flex flex-col items-center justify-center">
+        <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-2xl text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 mb-4 leading-tight">
+                Functioning Style Assessment
+            </h1>
+            <h2 class="text-2xl md:text-3xl font-semibold text-indigo-600 mb-6">
+                English Version
+            </h2>
+            <p class="text-lg text-gray-700 mb-8 text-left">
+                Welcome to the Functioning Style Assessment. This questionnaire explores your preferred ways of working, collaborating, and approaching tasks. Rank the answers to each question from 1 (Most like you) to 4 (Least like you). Each rank (1, 2, 3, 4) must be used exactly once per question. Your responses will help provide insights into your unique functioning style within various contexts.
+            </p>
+
+            <!-- Assessment Questions Form -->
+            <form id="assessmentForm" class="border-t border-gray-200 pt-8 mt-8 text-left">
+
+                <!-- Question 1 -->
+                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q1-block">
+                    <p class="text-lg font-semibold text-gray-800 mb-3">1. When starting a new project, what is your first instinct?</p>
+                    <div class="mb-2 flex items-center">
+                        <label for="q1-a" class="flex-grow text-gray-700">a) Jump right in and take action</label>
+                        <select id="q1-a" name="q1-a" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q1-b" class="flex-grow text-gray-700">b) Talk to others to get their opinions</label>
+                        <select id="q1-b" name="q1-b" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q1-c" class="flex-grow text-gray-700">c) Make a detailed plan before starting</label>
+                        <select id="q1-c" name="q1-c" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q1-d" class="flex-grow text-gray-700">d) Evaluate all possible risks and outcomes</label>
+                        <select id="q1-d" name="q1-d" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div id="q1-error" class="question-error-message hidden"></div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q2-block">
+                    <p class="text-lg font-semibold text-gray-800 mb-3">2. In a team meeting, you prefer to:</p>
+                    <div class="mb-2 flex items-center">
+                        <label for="q2-a" class="flex-grow text-gray-700">a) Take the lead and drive decisions</label>
+                        <select id="q2-a" name="q2-a" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q2-b" class="flex-grow text-gray-700">b) Ensure everyone feels included</label>
+                        <select id="q2-b" name="q2-b" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q2-c" class="flex-grow text-gray-700">c) Ask clarifying questions</label>
+                        <select id="q2-c" name="q2-c" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q2-d" class="flex-grow text-gray-700">d) Present data and facts to guide choices</label>
+                        <select id="q2-d" name="q2-d" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div id="q2-error" class="question-error-message hidden"></div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q3-block">
+                    <p class="text-lg font-semibold text-gray-800 mb-3">3. Under pressure, you tend to:</p>
+                    <div class="mb-2 flex items-center">
+                        <label for="q3-a" class="flex-grow text-gray-700">a) Become more assertive and direct</label>
+                        <select id="q3-a" name="q3-a" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q3-b" class="flex-grow text-gray-700">b) Seek support from others</label>
+                        <select id="q3-b" name="q3-b" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q3-c" class="flex-grow text-gray-700">c) Slow down and become more cautious</label>
+                        <select id="q3-c" name="q3-c" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q3-d" class="flex-grow text-gray-700">d) Double-check everything for accuracy</label>
+                        <select id="q3-d" name="q3-d" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div id="q3-error" class="question-error-message hidden"></div>
+                </div>
+
+                <!-- Question 4 -->
+                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q4-block">
+                    <p class="text-lg font-semibold text-gray-800 mb-3">4. Your ideal work environment is one where you can:</p>
+                    <div class="mb-2 flex items-center">
+                        <label for="q4-a" class="flex-grow text-gray-700">a) Achieve quick results</label>
+                        <select id="q4-a" name="q4-a" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q4-b" class="flex-grow text-gray-700">b) Work closely with others</label>
+                        <select id="q4-b" name="q4-b" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q4-c" class="flex-grow text-gray-700">c) Operate in a calm, stable atmosphere</label>
+                        <select id="q4-c" name="q4-c" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q4-d" class="flex-grow text-gray-700">d) Maintain high standards of quality</label>
+                        <select id="q4-d" name="q4-d" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div id="q4-error" class="question-error-message hidden"></div>
+                </div>
+
+                <!-- Question 5 -->
+                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q5-block">
+                    <p class="text-lg font-semibold text-gray-800 mb-3">5. When making decisions, you usually base them on:</p>
+                    <div class="mb-2 flex items-center">
+                        <label for="q5-a" class="flex-grow text-gray-700">a) Intuition and the need for quick action</label>
+                        <select id="q5-a" name="q5-a" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q5-b" class="flex-grow text-gray-700">b) What’s best for everyone involved</label>
+                        <select id="q5-b" name="q5-b" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q5-c" class="flex-grow text-gray-700">c) Proven methods that have worked before</label>
+                        <select id="q5-c" name="q5-c" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q5-d" class="flex-grow text-gray-700">d) Thorough research and analysis</label>
+                        <select id="q5-d" name="q5-d" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div id="q5-error" class="question-error-message hidden"></div>
+                </div>
+
+                <!-- Question 6 -->
+                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q6-block">
+                    <p class="text-lg font-semibold text-gray-800 mb-3">6. People usually describe you as:</p>
+                    <div class="mb-2 flex items-center">
+                        <label for="q6-a" class="flex-grow text-gray-700">a) Goal-driven and competitive</label>
+                        <select id="q6-a" name="q6-a" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q6-b" class="flex-grow text-gray-700">b) Friendly and engaging</label>
+                        <select id="q6-b" name="q6-b" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q6-c" class="flex-grow text-gray-700">c) Reliable and patient</label>
+                        <select id="q6-c" name="q6-c" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q6-d" class="flex-grow text-gray-700">d) Precise and thoughtful</label>
+                        <select id="q6-d" name="q6-d" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div id="q6-error" class="question-error-message hidden"></div>
+                </div>
+
+                <!-- Question 7 -->
+                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q7-block">
+                    <p class="text-lg font-semibold text-gray-800 mb-3">7. In conflict situations, you prefer to:</p>
+                    <div class="mb-2 flex items-center">
+                        <label for="q7-a" class="flex-grow text-gray-700">a) Address the issue head-on</label>
+                        <select id="q7-a" name="q7-a" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q7-b" class="flex-grow text-gray-700">b) Try to please everyone</label>
+                        <select id="q7-b" name="q7-b" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q7-c" class="flex-grow text-gray-700">c) Avoid conflict until it passes</label>
+                        <select id="q7-c" name="q7-c" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q7-d" class="flex-grow text-gray-700">d) Gather all the facts before responding</label>
+                        <select id="q7-d" name="q7-d" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div id="q7-error" class="question-error-message hidden"></div>
+                </div>
+
+                <!-- Question 8 -->
+                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q8-block">
+                    <p class="text-lg font-semibold text-gray-800 mb-3">8. Your approach to change is usually:</p>
+                    <div class="mb-2 flex items-center">
+                        <label for="q8-a" class="flex-grow text-gray-700">a) Welcoming it as an opportunity</label>
+                        <select id="q8-a" name="q8-a" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q8-b" class="flex-grow text-gray-700">b) Concerned about how it affects others</label>
+                        <select id="q8-b" name="q8-b" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q8-c" class="flex-grow text-gray-700">c) Cautious, preferring gradual adjustments</label>
+                        <select id="q8-c" name="q8-c" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q8-d" class="flex-grow text-gray-700">d) Skeptical until benefits are proven</label>
+                        <select id="q8-d" name="q8-d" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div id="q8-error" class="question-error-message hidden"></div>
+                </div>
+
+                <!-- Question 9 -->
+                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q9-block">
+                    <p class="text-lg font-semibold text-gray-800 mb-3">9. When working in a team, you typically take the role of:</p>
+                    <div class="mb-2 flex items-center">
+                        <label for="q9-a" class="flex-grow text-gray-700">a) The leader who gives direction</label>
+                        <select id="q9-a" name="q9-a" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q9-b" class="flex-grow text-gray-700">b) The one who promotes harmony</label>
+                        <select id="q9-b" name="q9-b" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q9-c" class="flex-grow text-gray-700">c) The steady contributor who stays consistent</label>
+                        <select id="q9-c" name="q9-c" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q9-d" class="flex-grow text-gray-700">d) The quality controller who upholds standards</label>
+                        <select id="q9-d" name="q9-d" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div id="q9-error" class="question-error-message hidden"></div>
+                </div>
+
+                <!-- Question 10 -->
+                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q10-block">
+                    <p class="text-lg font-semibold text-gray-800 mb-3">10. Your communication style is usually:</p>
+                    <div class="mb-2 flex items-center">
+                        <label for="q10-a" class="flex-grow text-gray-700">a) Direct and to the point</label>
+                        <select id="q10-a" name="q10-a" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q10-b" class="flex-grow text-gray-700">b) Warm and personal</label>
+                        <select id="q10-b" name="q10-b" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q10-c" class="flex-grow text-gray-700">c) Patient and considerate</label>
+                        <select id="q10-c" name="q10-c" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q10-d" class="flex-grow text-gray-700">d) Precise and detailed</label>
+                        <select id="q10-d" name="q10-d" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div id="q10-error" class="question-error-message hidden"></div>
+                </div>
+
+                <!-- Question 11 -->
+                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q11-block">
+                    <p class="text-lg font-semibold text-gray-800 mb-3">11. When you make a mistake, your first reaction is to:</p>
+                    <div class="mb-2 flex items-center">
+                        <label for="q11-a" class="flex-grow text-gray-700">a) Quickly find a solution and move on</label>
+                        <select id="q11-a" name="q11-a" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q11-b" class="flex-grow text-gray-700">b) Talk about how you feel</label>
+                        <select id="q11-b" name="q11-b" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q11-c" class="flex-grow text-gray-700">c) Quietly correct it but feel upset inside</label>
+                        <select id="q11-c" name="q11-c" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q11-d" class="flex-grow text-gray-700">d) Analyze what caused the mistake</label>
+                        <select id="q11-d" name="q11-d" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div id="q11-error" class="question-error-message hidden"></div>
+                </div>
+
+                <!-- Question 12 -->
+                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q12-block">
+                    <p class="text-lg font-semibold text-gray-800 mb-3">12. Your motivation comes mainly from:</p>
+                    <div class="mb-2 flex items-center">
+                        <label for="q12-a" class="flex-grow text-gray-700">a) Achieving goals and winning</label>
+                        <select id="q12-a" name="q12-a" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q12-b" class="flex-grow text-gray-700">b) Recognition and appreciation from others</label>
+                        <select id="q12-b" name="q12-b" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q12-c" class="flex-grow text-gray-700">c) Security and stability</label>
+                        <select id="q12-c" name="q12-c" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q12-d" class="flex-grow text-gray-700">d) Doing things right the first time</label>
+                        <select id="q12-d" name="q12-d" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div id="q12-error" class="question-error-message hidden"></div>
+                </div>
+
+                <!-- Question 13 -->
+                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q13-block">
+                    <p class="text-lg font-semibold text-gray-800 mb-3">13. In a crisis situation, you’re likely to:</p>
+                    <div class="mb-2 flex items-center">
+                        <label for="q13-a" class="flex-grow text-gray-700">a) Act quickly to solve the problem</label>
+                        <select id="q13-a" name="q13-a" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q13-b" class="flex-grow text-gray-700">b) Gather people for support</label>
+                        <select id="q13-b" name="q13-b" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q13-c" class="flex-grow text-gray-700">c) Remain calm and wait for clear direction</label>
+                        <select id="q13-c" name="q13-c" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q13-d" class="flex-grow text-gray-700">d) Collect all the information before acting</label>
+                        <select id="q13-d" name="q13-d" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div id="q13-error" class="question-error-message hidden"></div>
+                </div>
+
+                <!-- Question 14 -->
+                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q14-block">
+                    <p class="text-lg font-semibold text-gray-800 mb-3">14. When meeting new people, you are usually:</p>
+                    <div class="mb-2 flex items-center">
+                        <label for="q14-a" class="flex-grow text-gray-700">a) Confident and take control of the conversation</label>
+                        <select id="q14-a" name="q14-a" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q14-b" class="flex-grow text-gray-700">b) Friendly and interested in them</label>
+                        <select id="q14-b" name="q14-b" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q14-c" class="flex-grow text-gray-700">c) Polite but reserved</label>
+                        <select id="q14-c" name="q14-c" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q14-d" class="flex-grow text-gray-700">d) Professional and formal</label>
+                        <select id="q14-d" name="q14-d" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div id="q14-error" class="question-error-message hidden"></div>
+                </div>
+
+                <!-- Question 15 -->
+                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q15-block">
+                    <p class="text-lg font-semibold text-gray-800 mb-3">15. Your time management style is:</p>
+                    <div class="mb-2 flex items-center">
+                        <label for="q15-a" class="flex-grow text-gray-700">a) Focus on priorities and push through</label>
+                        <select id="q15-a" name="q15-a" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q15-b" class="flex-grow text-gray-700">b) Make time for people and relationships</label>
+                        <select id="q15-b" name="q15-b" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q15-c" class="flex-grow text-gray-700">c) Stick to regular routines and schedules</label>
+                        <select id="q15-c" name="q15-c" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q15-d" class="flex-grow text-gray-700">d) Plan everything carefully in advance</label>
+                        <select id="q15-d" name="q15-d" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div id="q15-error" class="question-error-message hidden"></div>
+                </div>
+
+                <!-- Question 16 -->
+                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q16-block">
+                    <p class="text-lg font-semibold text-gray-800 mb-3">16. When criticized, you usually respond by:</p>
+                    <div class="mb-2 flex items-center">
+                        <label for="q16-a" class="flex-grow text-gray-700">a) Defending yourself or pushing back</label>
+                        <select id="q16-a" name="q16-a" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q16-b" class="flex-grow text-gray-700">b) Worrying about what others think</label>
+                        <select id="q16-b" name="q16-b" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q16-c" class="flex-grow text-gray-700">c) Accepting it quietly but feeling upset inside</label>
+                        <select id="q16-c" name="q16-c" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q16-d" class="flex-grow text-gray-700">d) Objectively analyzing the feedback</label>
+                        <select id="q16-d" name="q16-d" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div id="q16-error" class="question-error-message hidden"></div>
+                </div>
+
+                <!-- Question 17 -->
+                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q17-block">
+                    <p class="text-lg font-semibold text-gray-800 mb-3">17. Your preferred way of learning is:</p>
+                    <div class="mb-2 flex items-center">
+                        <label for="q17-a" class="flex-grow text-gray-700">a) Through hands-on experience and challenge</label>
+                        <select id="q17-a" name="q17-a" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q17-b" class="flex-grow text-gray-700">b) Through group discussion and collaboration</label>
+                        <select id="q17-b" name="q17-b" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q17-c" class="flex-grow text-gray-700">c) Through step-by-step instructions</label>
+                        <select id="q17-c" name="q17-c" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q17-d" class="flex-grow text-gray-700">d) Through self-study and research</label>
+                        <select id="q17-d" name="q17-d" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div id="q17-error" class="question-error-message hidden"></div>
+                </div>
+
+                <!-- Question 18 -->
+                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q18-block">
+                    <p class="text-lg font-semibold text-gray-800 mb-3">18. In a meeting, you’re likely to:</p>
+                    <div class="mb-2 flex items-center">
+                        <label for="q18-a" class="flex-grow text-gray-700">a) Drive the agenda and push for action</label>
+                        <select id="q18-a" name="q18-a" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q18-b" class="flex-grow text-gray-700">b) Make sure everyone has a chance to speak</label>
+                        <select id="q18-b" name="q18-b" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q18-c" class="flex-grow text-gray-700">c) Listen more than you talk</label>
+                        <select id="q18-c" name="q18-c" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q18-d" class="flex-grow text-gray-700">d) Ask questions for clarity</label>
+                        <select id="q18-d" name="q18-d" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div id="q18-error" class="question-error-message hidden"></div>
+                </div>
+
+                <!-- Question 19 -->
+                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q19-block">
+                    <p class="text-lg font-semibold text-gray-800 mb-3">19. Your greatest fear at work is likely to be:</p>
+                    <div class="mb-2 flex items-center">
+                        <label for="q19-a" class="flex-grow text-gray-700">a) Losing control or failing</label>
+                        <select id="q19-a" name="q19-a" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q19-b" class="flex-grow text-gray-700">b) Being rejected or isolated</label>
+                        <select id="q19-b" name="q19-b" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q19-c" class="flex-grow text-gray-700">c) Facing sudden changes</label>
+                        <select id="q19-c" name="q19-c" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q19-d" class="flex-grow text-gray-700">d) Making mistakes or being criticized</label>
+                        <select id="q19-d" name="q19-d" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div id="q19-error" class="question-error-message hidden"></div>
+                </div>
+
+                <!-- Question 20 -->
+                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q20-block">
+                    <p class="text-lg font-semibold text-gray-800 mb-3">20. When finishing a task, you feel best when:</p>
+                    <div class="mb-2 flex items-center">
+                        <label for="q20-a" class="flex-grow text-gray-700">a) You’ve exceeded the target</label>
+                        <select id="q20-a" name="q20-a" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q20-b" class="flex-grow text-gray-700">b) Everyone is satisfied with the result</label>
+                        <select id="q20-b" name="q20-b" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q20-c" class="flex-grow text-gray-700">c) It contributed to security and stability</label>
+                        <select id="q20-c" name="q20-c" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <label for="q20-d" class="flex-grow text-gray-700">d) It met high-quality standards</label>
+                        <select id="q20-d" name="q20-d" class="rank-select ml-4 p-2 border rounded-md">
+                            <option value="">Rank</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div id="q20-error" class="question-error-message hidden"></div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 mt-8">
+                    Submit Assessment
+                </button>
+            </form>
+
+            <!-- Results Display Area -->
+            <div id="resultsDisplay" class="hidden bg-blue-50 p-6 rounded-lg shadow-md mt-8 text-center">
+                <h3 class="text-2xl font-bold text-blue-800 mb-4">Your Functioning Style:</h3>
+                <p id="functioningStyleType" class="text-4xl font-extrabold text-indigo-700 mb-4"></p>
+                <p id="resultDetails" class="text-lg text-blue-700"></p>
+                <div class="mt-6 text-left">
+                    <h4 class="text-xl font-semibold text-blue-800 mb-2">Role Descriptions:</h4>
+                    <p class="text-lg text-blue-700 mb-2"><strong>🟦 D – Director:</strong> Goal-driven, assertive, and leadership-oriented. Focus: Leadership and results. Communicates directly. Motivated by challenge and achievement.</p>
+                    <p class="text-lg text-blue-700 mb-2"><strong>🟨 I – Innovator:</strong> Creative, expressive, idea generator. Focus: People and ideas. Communicates enthusiastically. Motivated by recognition and innovation.</p>
+                    <p class="text-lg text-blue-700 mb-2"><strong>🟥 S – Specialist:</strong> Analytical, systematic, quality-focused. Focus: Accuracy and analysis. Communicates with detail. Motivated by precision and expertise.</p>
+                    <p class="text-lg text-blue-700 mb-2"><strong>🟩 K – Coordinator:</strong> Patient, reliable, supportive. Focus: Stability and support. Communicates with empathy. Motivated by harmony and security.</p>
+                </div>
+            </div>
+
+            <!-- Back to Homepage Button -->
+            <div class="mt-10">
+                <a href="index.html" class="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
+                    Back to Homepage
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Section - Reusing the same footer structure as index.html -->
+    <footer class="bg-gray-800 text-white py-6">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-sm">&copy; 2025 Your Business. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('assessmentForm');
+            const resultsDisplay = document.getElementById('resultsDisplay');
+            const functioningStyleTypeElement = document.getElementById('functioningStyleType');
+            const resultDetailsElement = document.getElementById('resultDetails');
+            const questionBlocks = document.querySelectorAll('.question-block');
+
+            // Define point values for ranks
+            const rankPoints = { '1': 4, '2': 3, '3': 2, '4': 1 };
+
+            // Define the mapping from question option to DISK dimension
+            const diskMapping = {
+                'a': 'D',
+                'b': 'I',
+                'c': 'S',
+                'd': 'K'
+            };
+
+            // Function to validate if a question's ranks are unique (1, 2, 3, 4)
+            function isQuestionRankedCorrectly(questionNumber) {
+                const ranks = [];
+                const selects = document.querySelectorAll(`#q${questionNumber}-block .rank-select`);
+                let allSelected = true;
+
+                selects.forEach(select => {
+                    if (select.value === "") {
+                        allSelected = false;
+                    } else {
+                        ranks.push(select.value);
+                    }
+                });
+
+                if (!allSelected) {
+                    return false; // Not all options ranked
+                }
+
+                // Check for unique ranks (1, 2, 3, 4)
+                const uniqueRanks = new Set(ranks);
+                return uniqueRanks.size === 4 && ['1', '2', '3', '4'].every(r => uniqueRanks.has(r));
+            }
+
+            // Function to display/hide real-time error message for a specific question
+            function updateQuestionError(questionNumber) {
+                const errorDiv = document.getElementById(`q${questionNumber}-error`);
+                if (!errorDiv) return; // Exit if error div not found
+
+                if (!isQuestionRankedCorrectly(questionNumber)) {
+                    errorDiv.textContent = "Each rank (1, 2, 3, 4) must be used exactly once per question.";
+                    errorDiv.classList.remove('hidden');
+                } else {
+                    errorDiv.classList.add('hidden');
+                    errorDiv.textContent = ""; // Clear message
+                }
+            }
+
+            // Function to find the next unranked/incorrectly ranked question and scroll to it, applying subtle highlight
+            function findAndScrollToNextUnanswered() {
+                // Remove subtle highlight from all questions first
+                questionBlocks.forEach(block => {
+                    block.classList.remove('next-focus-question');
+                });
+
+                for (let i = 1; i <= 20; i++) {
+                    const questionBlock = document.getElementById(`q${i}-block`);
+                    // Check if question is not correctly ranked AND not already red (from submission error)
+                    if (!isQuestionRankedCorrectly(i) && !questionBlock.classList.contains('unanswered-question')) {
+                        questionBlock.classList.add('next-focus-question'); // Apply subtle highlight
+                        questionBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        updateQuestionError(i); // Show real-time error for this question
+                        return true; // Found and scrolled
+                    }
+                }
+                return false; // No unranked/incorrectly ranked questions found
+            }
+
+            // Function to highlight all unranked/incorrectly ranked questions in red and scroll to the first one (on submit)
+            function highlightAndScrollToUnansweredOnSubmit() {
+                let firstUnansweredBlock = null;
+                let allQuestionsCorrectlyRanked = true;
+
+                // First, remove ALL highlights (both subtle and red) and all individual error messages
+                questionBlocks.forEach((block, index) => {
+                    block.classList.remove('unanswered-question', 'next-focus-question');
+                    const errorDiv = document.getElementById(`q${index + 1}-error`);
+                    if (errorDiv) {
+                        errorDiv.classList.add('hidden');
+                        errorDiv.textContent = "";
+                    }
+                });
+
+                // Iterate through questions to find truly unranked/incorrectly ranked ones and apply red highlight
+                for (let i = 1; i <= 20; i++) {
+                    const questionBlock = document.getElementById(`q${i}-block`);
+                    if (!isQuestionRankedCorrectly(i)) {
+                        allQuestionsCorrectlyRanked = false;
+                        questionBlock.classList.add('unanswered-question'); // Add red highlight
+                        if (!firstUnansweredBlock) {
+                            firstUnansweredBlock = questionBlock; // Mark the first one found
+                        }
+                    }
+                }
+
+                if (!allQuestionsCorrectlyRanked) {
+                    // If there are unranked/incorrectly ranked questions, scroll to the first red one
+                    if (firstUnansweredBlock) {
+                        firstUnansweredBlock.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Corrected method name
+                    }
+                    return true; // Indicates unranked/incorrectly ranked questions exist
+                }
+                return false; // All questions are correctly ranked
+            }
+
+            // Add change event listeners to all rank select dropdowns for real-time validation and scrolling
+            document.querySelectorAll('.rank-select').forEach(select => {
+                select.addEventListener('change', () => {
+                    const questionName = select.name;
+                    const questionNumber = questionName.split('-')[0].replace('q', '');
+                    // Update the error message for the current question immediately
+                    updateQuestionError(questionNumber);
+                    // Attempt to scroll to the next unranked/incorrectly ranked question and apply subtle highlight
+                    findAndScrollToNextUnanswered();
+                });
+            });
+
+            form.addEventListener('submit', (event) => {
+                event.preventDefault(); // Prevent default form submission
+
+                // When submitting, first highlight all unranked/incorrectly ranked questions in red and scroll to the first one
+                const hasUnanswered = highlightAndScrollToUnansweredOnSubmit();
+
+                if (hasUnanswered) {
+                    // Display an error message if there are unranked/incorrectly ranked questions
+                    resultsDisplay.classList.remove('hidden', 'bg-blue-50', 'border-blue-400', 'text-blue-700');
+                    resultsDisplay.classList.add('bg-red-100', 'border-red-400', 'text-red-700');
+                    functioningStyleTypeElement.textContent = "Error!";
+                    resultDetailsElement.textContent = "Please ensure all questions are ranked uniquely from 1 to 4 before submitting.";
+                    return; // Stop further processing
+                }
+
+                // If all questions are correctly ranked, hide any previous error message and proceed
+                resultsDisplay.classList.add('hidden');
+
+                // Initialize scores for D, I, S, K
+                let dScore = 0, iScore = 0, sScore = 0, kScore = 0;
+
+                // Score calculation logic
+                for (let qNum = 1; qNum <= 20; qNum++) {
+                    const options = ['a', 'b', 'c', 'd'];
+                    options.forEach(optionChar => {
+                        const selectElement = document.getElementById(`q${qNum}-${optionChar}`);
+                        const rank = selectElement.value;
+                        if (rank !== "") {
+                            const points = rankPoints[rank];
+                            const dimension = diskMapping[optionChar];
+
+                            if (dimension === 'D') dScore += points;
+                            else if (dimension === 'I') iScore += points;
+                            else if (dimension === 'S') sScore += points;
+                            else if (dimension === 'K') kScore += points;
+                        }
+                    });
+                }
+
+                // Determine the highest score(s) and corresponding type(s)
+                const scores = { 'D': dScore, 'I': iScore, 'S': sScore, 'K': kScore };
+                let maxScore = -1;
+                let dominantTypes = [];
+
+                for (const type in scores) {
+                    if (scores[type] > maxScore) {
+                        maxScore = scores[type];
+                        dominantTypes = [type]; // Start a new list if a higher score is found
+                    } else if (scores[type] === maxScore) {
+                        dominantTypes.push(type); // Add to list if it's a tie
+                    }
+                }
+
+                // Display results
+                resultsDisplay.classList.remove('hidden', 'bg-red-100', 'border-red-400', 'text-red-700');
+                resultsDisplay.classList.add('bg-blue-50', 'border-blue-400', 'text-blue-700');
+
+                if (dominantTypes.length === 1) {
+                    functioningStyleTypeElement.textContent = dominantTypes[0];
+                    resultDetailsElement.innerHTML = `<p>Your dominant functioning style is <strong>${dominantTypes[0]}</strong>.</p>`;
+                } else {
+                    functioningStyleTypeElement.textContent = dominantTypes.join(' / ');
+                    resultDetailsElement.innerHTML = `<p>You have a combination of functioning styles: <strong>${dominantTypes.join(', ')}</strong>.</p><p>Consider exploring the descriptions below to understand your blend of preferences.</p>`;
+                }
+
+                // Add individual scores to the results display
+                resultDetailsElement.innerHTML += `
+                    <p class="mt-4"><strong>Scores:</strong></p>
+                    <ul class="list-disc list-inside mx-auto max-w-md">
+                        <li><strong>Director (D):</strong> ${dScore}</li>
+                        <li><strong>Innovator (I):</strong> ${iScore}</li>
+                        <li><strong>Specialist (S):</strong> ${sScore}</li>
+                        <li><strong>Coordinator (K):</strong> ${kScore}</li>
+                    </ul>
+                `;
+
+                // Scroll to results
+                resultsDisplay.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+</body>
+</html>
