@@ -87,7 +87,6 @@
                     <input type="text" id="userName" name="userName" placeholder="Enter your full name"
                            class="shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-indigo-500" required>
                 </div>
-                <!-- Email input field removed as per user request -->
             </div>
 
             <!-- Assessment Questions Form -->
@@ -542,7 +541,6 @@
                     if (firstUnansweredBlock) {
                         firstUnansweredBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
-                    // Do not show resultsDisplay here, only the error message
                     showMessage("Please answer all questions before submitting.", "error");
                     return;
                 }
@@ -587,13 +585,15 @@
 
                 const personalityType = `${ei}${sn}${tf}${jp}`;
 
-                // No longer displaying results on screen, so no need to populate resultsDisplay elements
-                // resultsDisplay.classList.remove('hidden', 'bg-red-100', 'border-red-400', 'text-red-700');
-                // resultsDisplay.classList.add('bg-blue-50', 'border-blue-400', 'text-blue-700');
-                // personalityTypeElement.textContent = personalityType;
-                // resultDetailsElement.innerHTML = `<p>Based on your answers, your personality type is <strong>${personalityType}</strong>.</p>`;
-                // resultDetailsElement.innerHTML += `... detailed scores ...`;
-                // resultsDisplay.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Prepare detailed scores HTML for the generic EmailJS template
+                const detailedScoresHtml = `
+                    <ul>
+                        <li><strong>Extraversion (E) / Introversion (I):</strong> E: ${eScore}, I: ${iScore}</li>
+                        <li><strong>Sensing (S) / Intuition (N):</strong> S: ${sScore}, N: ${nScore}</li>
+                        <li><strong>Thinking (T) / Feeling (F):</strong> T: ${tScore}, F: ${fScore}</li>
+                        <li><strong>Judging (J) / Perceiving (P):</strong> J: ${jScore}, P: ${pScore}</li>
+                    </ul>
+                `;
 
                 // Send email via EmailJS
                 const serviceID = 'service_n3for6s'; // Your EmailJS Service ID
@@ -602,11 +602,9 @@
                 const templateParams = {
                     user_name: userName,
                     user_email: userEmail, // This will be your hardcoded email
-                    personality_type: personalityType,
-                    ei_score: `E: ${eScore}, I: ${iScore}`,
-                    sn_score: `S: ${sScore}, N: ${nScore}`,
-                    tf_score: `T: ${tScore}, F: ${fScore}`,
-                    jp_score: `J: ${jScore}, P: ${pScore}`
+                    assessment_name: "Personality Behaviour Analysis", // English name for the assessment
+                    main_result: personalityType,
+                    detailed_scores_html: detailedScoresHtml
                 };
 
                 console.log('Attempting to send email with params:', templateParams); // DEBUG: Confirm email send attempt
