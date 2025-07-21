@@ -302,8 +302,75 @@
                     <div id="q15-error" class="question-error-message hidden"></div>
                 </div>
 
-                <!-- Additional Questions (21-40) -->
-                <h3 class="text-2xl font-semibold text-indigo-600 mb-6 mt-10">Part B: Additional Questions (21-40)</h3>
+                <!-- Question 16 -->
+                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q16-block">
+                    <p class="text-lg font-semibold text-gray-800 mb-3">16. Your desk drawer is:</p>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q16-a" name="q16" value="A" class="mr-2">
+                        <label for="q16-a" class="text-gray-700">A) Organized with everything in its place</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q16-b" name="q16" value="B" class="mr-2">
+                        <label for="q16-b" class="text-gray-700">B) A mix of things you use often</label>
+                    </div>
+                    <div id="q16-error" class="question-error-message hidden"></div>
+                </div>
+
+                <!-- Question 17 -->
+                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q17-block">
+                    <p class="text-lg font-semibold text-gray-800 mb-3">17. When you plan a vacation, you prefer:</p>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q17-a" name="q17" value="A" class="mr-2">
+                        <label for="q17-a" class="text-gray-700">A) A detailed itinerary and pre-bookings</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q17-b" name="q17" value="B" class="mr-2">
+                        <label for="q17-b" class="text-gray-700">B) To see what happens and decide spontaneously</label>
+                    </div>
+                    <div id="q17-error" class="question-error-message hidden"></div>
+                </div>
+
+                <!-- Question 18 -->
+                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q18-block">
+                    <p class="text-lg font-semibold text-gray-800 mb-3">18. You prefer work that has:</p>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q18-a" name="q18" value="A" class="mr-2">
+                        <label for="q18-a" class="text-gray-700">A) Clear deadlines and structures</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q18-b" name="q18" value="B" class="mr-2">
+                        <label for="q18-b" class="text-gray-700">B) Flexibility and open choices</label>
+                    </div>
+                    <div id="q18-error" class="question-error-message hidden"></div>
+                </div>
+
+                <!-- Question 19 -->
+                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q19-block">
+                    <p class="text-lg font-semibold text-gray-800 mb-3">19. When approaching a task, you:</p>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q19-a" name="q19" value="A" class="mr-2">
+                        <label for="q19-a" class="text-gray-700">A) Start early to finish on time</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q19-b" name="q19" value="B" class="mr-2">
+                        <label for="q19-b" class="text-gray-700">B) Work best under pressure closer to the deadline</label>
+                    </div>
+                    <div id="q19-error" class="question-error-message hidden"></div>
+                </div>
+
+                <!-- Question 20 -->
+                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q20-block">
+                    <p class="text-lg font-semibold text-gray-800 mb-3">20. You feel most comfortable when:</p>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q20-a" name="q20" value="A" class="mr-2">
+                        <label for="q20-a" class="text-gray-700">A) Plans are made and things are settled</label>
+                    </div>
+                    <div class="mb-2 flex items-center">
+                        <input type="radio" id="q20-b" name="q20" value="B" class="mr-2">
+                        <label for="q20-b" class="text-gray-700">B) Options are kept open for change</label>
+                    </div>
+                    <div id="q20-error" class="question-error-message hidden"></div>
+                </div>
 
                 <!-- Question 21 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q21-block">
@@ -683,7 +750,7 @@
                     block.classList.remove('next-focus-question');
                 });
 
-                for (let i = 1; i <= 40; i++) { // Changed loop to 40 questions
+                for (let i = 1; i <= 40; i++) { // Loop through all 40 questions
                     const questionName = `q${i}`;
                     const questionBlock = document.getElementById(`q${i}-block`);
                     if (questionBlock && !isQuestionAnswered(questionName) && !questionBlock.classList.contains('unanswered-question')) {
@@ -732,7 +799,7 @@
                     }
                 });
 
-                for (let i = 1; i <= 40; i++) { // Changed loop to 40 questions
+                for (let i = 1; i <= 40; i++) { // Loop through all 40 questions
                     const questionName = `q${i}`;
                     const questionBlock = document.getElementById(`q${i}-block`);
                     if (questionBlock && !isQuestionAnswered(questionName)) {
@@ -760,7 +827,7 @@
                 let tScore = 0, fScore = 0;
                 let jScore = 0, pScore = 0;
 
-                // Define all questions for each dimension (now 10 per dimension)
+                // Define all questions for each dimension (10 per dimension)
                 const eiQuestions = [1, 2, 3, 4, 5, 21, 22, 23, 24, 25];
                 const snQuestions = [6, 7, 8, 9, 10, 26, 27, 28, 29, 30];
                 const tfQuestions = [11, 12, 13, 14, 15, 31, 32, 33, 34, 35];
@@ -769,7 +836,7 @@
                 // Process each question
                 for (let i = 1; i <= 40; i++) {
                     const selectedValue = document.querySelector(`input[name="q${i}"]:checked`);
-                    if (!selectedValue) continue; // Skip if question not answered (should be caught by validation)
+                    if (!selectedValue) continue; // Should not happen if validation passes
 
                     const value = selectedValue.value;
 
@@ -787,6 +854,13 @@
                         else if (value === 'B') pScore++;
                     }
                 }
+
+                // DEBUG: Log scores to console
+                console.log("Calculated scores:");
+                console.log(`E: ${eScore}, I: ${iScore}`);
+                console.log(`S: ${sScore}, N: ${nScore}`);
+                console.log(`T: ${tScore}, F: ${fScore}`);
+                console.log(`J: ${jScore}, P: ${pScore}`);
 
                 // Determine personality type letters
                 const ei = eScore >= iScore ? 'E' : 'I'; // Use >= for tie-breaking, default to E
