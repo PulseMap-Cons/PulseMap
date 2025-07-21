@@ -32,6 +32,30 @@
             margin-top: 0.5rem;
             text-align: left;
         }
+        /* Styles for the custom message box */
+        .message-box {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none; /* Hidden by default */
+            font-weight: bold;
+            text-align: center;
+        }
+        .message-box.success {
+            background-color: #d1fae5; /* green-100 */
+            color: #065f46; /* green-800 */
+            border: 1px solid #34d399; /* green-400 */
+        }
+        .message-box.error {
+            background-color: #fee2e2; /* red-100 */
+            color: #991b1b; /* red-800 */
+            border: 1px solid #f87171; /* red-400 */
+        }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
@@ -42,6 +66,9 @@
             <img src="https://i.imgur.com/Zx34Iky.png" alt="Jou Besigheidslogo" class="h-24 sm:h-32 md:h-40 w-full object-contain rounded-lg shadow-sm">
         </div>
     </header>
+
+    <!-- Custom Message Box -->
+    <div id="messageBox" class="message-box"></div>
 
     <!-- Main Content Section for the Assessment -->
     <main class="flex-grow container mx-auto px-4 py-8 flex flex-col items-center justify-center">
@@ -55,6 +82,16 @@
             <p class="text-lg text-gray-700 mb-8 text-left">
                 Welkom by die Funksioneringstyl Assessering. Hierdie vraelys ondersoek jou voorkeur maniere van werk, samewerking en taakbenadering. Rangskik die antwoorde vir elke vraag van 1 (Meeste soos jy) tot 4 (Minste soos jy). Elke rang (1, 2, 3, 4) moet presies een keer per vraag gebruik word. Jou antwoorde sal insigte gee in jou unieke funksioneringstyl binne verskillende kontekste.
             </p>
+
+            <!-- User Information Form -->
+            <div class="mb-8 p-6 bg-blue-50 rounded-lg shadow-inner text-left">
+                <h3 class="text-xl font-semibold text-blue-800 mb-4">Jou Besonderhede</h3>
+                <div class="mb-4">
+                    <label for="userName" class="block text-gray-700 text-sm font-bold mb-2">Jou Naam:</label>
+                    <input type="text" id="userName" name="userName" placeholder="Voer jou volle naam in"
+                           class="shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-indigo-500" required>
+                </div>
+            </div>
 
             <!-- Assessment Questions Form -->
             <form id="assessmentForm" class="border-t border-gray-200 pt-8 mt-8 text-left">
@@ -985,18 +1022,9 @@
                 </button>
             </form>
 
-            <!-- Results Display Area -->
-            <div id="resultsDisplay" class="hidden bg-blue-50 p-6 rounded-lg shadow-md mt-8 text-center">
-                <h3 class="text-2xl font-bold text-blue-800 mb-4">Jou Funksioneringstyl:</h3>
-                <p id="functioningStyleType" class="text-4xl font-extrabold text-indigo-700 mb-4"></p>
-                <p id="resultDetails" class="text-lg text-blue-700"></p>
-                <div class="mt-6 text-left">
-                    <h4 class="text-xl font-semibold text-blue-800 mb-2">Rolbeskrywings:</h4>
-                    <p class="text-lg text-blue-700 mb-2"><strong>🟦 D – Direkteur:</strong> Doelgerig, assertief, leierskapgeoriënteerd. Fokus: Leierskap en resultate. Direkte kommunikasiestyl. Gemotiveerd deur uitdagings en prestasie.</p>
-                    <p class="text-lg text-blue-700 mb-2"><strong>🟨 I – Innoveerder:</strong> Kreatief, uitdrukend, ideegenereerder. Fokus: Idees en mense. Entoesiastiese kommunikasiestyl. Gemotiveerd deur erkenning en innovasie.</p>
-                    <p class="text-lg text-blue-700 mb-2"><strong>🟥 S – Spesialis:</strong> Analities, sistematies, kwaliteitsgeoriënteerd. Fokus: Kwaliteit en analise. Gedetailleerde kommunikasiestyl. Gemotiveerd deur presiesheid en kundigheid.</p>
-                    <p class="text-lg text-blue-700 mb-2"><strong>🟩 K – Koördineerder:</strong> Geduldig, betroubaar, ondersteunend. Fokus: Stabiliteit en ondersteuning. Ondersteunende kommunikasiestyl. Gemotiveerd deur sekuriteit en harmonie.</p>
-                </div>
+            <!-- Results Display Area - This section will now be permanently hidden for the client -->
+            <div id="resultsDisplay" class="hidden">
+                <!-- Content that was previously displayed to the client, now hidden -->
             </div>
 
             <!-- Back to Homepage Button -->
@@ -1015,25 +1043,44 @@
         </div>
     </footer>
 
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        // Initialize EmailJS with your Public Key
+        (function() {
+            try {
+                emailjs.init("Pmd3fgupxDv25ALjZ"); // Your EmailJS Public Key
+                console.log("EmailJS initialized successfully.");
+            } catch (e) {
+                console.error("Error initializing EmailJS:", e);
+            }
+        })();
+    </script>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('assessmentForm');
-            const resultsDisplay = document.getElementById('resultsDisplay');
-            const functioningStyleTypeElement = document.getElementById('functioningStyleType');
-            const resultDetailsElement = document.getElementById('resultDetails');
+            const userNameInput = document.getElementById('userName');
             const questionBlocks = document.querySelectorAll('.question-block');
+            const messageBox = document.getElementById('messageBox'); // Get the message box element
 
             // Define point values for ranks
             const rankPoints = { '1': 4, '2': 3, '3': 2, '4': 1 };
 
-            // Define the mapping from question option to DISK dimension
-            // This mapping is based on the provided "Antwoordsleutel en Dimensie-koppeling"
-            const diskMapping = {
-                'a': 'D',
-                'b': 'I',
-                'c': 'S', // Note: In the provided doc, C is Specialist (S) and D is Coordinator (K) for all questions.
-                'd': 'K'
-            };
+            // Function to show messages
+            function showMessage(message, type) {
+                console.log('showMessage called:', message, type); // DEBUG: Confirm showMessage is called
+                messageBox.textContent = message;
+                messageBox.className = 'message-box'; // Reset classes
+                messageBox.classList.add(type); // Add success or error class
+                messageBox.style.display = 'block'; // Show the message box
+
+                // Hide message after 5 seconds
+                setTimeout(() => {
+                    messageBox.style.display = 'none';
+                    console.log('Message box hidden.'); // DEBUG: Confirm message box hides
+                }, 5000);
+            }
 
             // Function to validate if a question's ranks are unique (1, 2, 3, 4)
             function isQuestionRankedCorrectly(questionNumber) {
@@ -1143,46 +1190,31 @@
 
             form.addEventListener('submit', (event) => {
                 event.preventDefault(); // Prevent default form submission
+                console.log('Form submitted.'); // DEBUG: Confirm form submission event fired
 
-                // When submitting, first highlight all unranked/incorrectly ranked questions in red and scroll to the first one
+                const userName = userNameInput.value.trim();
+                const userEmail = "info@pulsemap.co.za"; // Hardcoded email for recipient
+
+                // Basic validation for name
+                if (!userName) {
+                    showMessage("Voer asseblief jou naam in.", "error"); // Afrikaans for "Please enter your name."
+                    userNameInput.focus();
+                    return;
+                }
+                console.log('Name validated.'); // DEBUG: Confirm validation passed
+
                 const hasUnanswered = highlightAndScrollToUnansweredOnSubmit();
 
                 if (hasUnanswered) {
-                    // Display an error message if there are unranked/incorrectly ranked questions
-                    resultsDisplay.classList.remove('hidden', 'bg-blue-50', 'border-blue-400', 'text-blue-700');
-                    resultsDisplay.classList.add('bg-red-100', 'border-red-400', 'text-red-700');
-                    functioningStyleTypeElement.textContent = "Fout!";
-                    resultDetailsElement.textContent = "Verseker asseblief dat alle vrae uniek van 1 tot 4 gerangskik is voordat u indien.";
+                    showMessage("Verseker asseblief dat alle vrae uniek van 1 tot 4 gerangskik is voordat u indien.", "error"); // Afrikaans for "Please ensure all questions are uniquely ranked from 1 to 4 before submitting."
                     return; // Stop further processing
                 }
-
-                // If all questions are correctly ranked, hide any previous error message and proceed
-                resultsDisplay.classList.add('hidden');
+                console.log('All questions answered.'); // DEBUG: Confirm all questions are answered
 
                 // Initialize scores for D, I, S, K
                 let dScore = 0, iScore = 0, sScore = 0, kScore = 0;
 
-                // Score calculation logic
-                for (let qNum = 1; qNum <= 20; qNum++) {
-                    const options = ['a', 'b', 'c', 'd'];
-                    options.forEach(optionChar => {
-                        const selectElement = document.getElementById(`q${qNum}-${optionChar}`);
-                        const rank = selectElement.value;
-                        if (rank !== "") {
-                            const points = rankPoints[rank];
-                            const dimension = diskMapping[optionChar];
-
-                            if (dimension === 'D') dScore += points;
-                            else if (dimension === 'I') iScore += points;
-                            else if (dimension === 'S') iScore += points; // Corrected: S is Specialist, not Innovator. This was a bug in previous version's JS logic.
-                            else if (dimension === 'K') kScore += points;
-                        }
-                    });
-                }
-                // Corrected scoring based on the provided document's mapping (A=D, B=I, C=S, D=K)
-                // Re-initialize scores to ensure clean calculation
-                dScore = 0; iScore = 0; sScore = 0; kScore = 0;
-
+                // Score calculation logic based on the provided document's mapping (A=D, B=I, C=S, D=K)
                 for (let qNum = 1; qNum <= 20; qNum++) {
                     const selectA = document.getElementById(`q${qNum}-a`);
                     const selectB = document.getElementById(`q${qNum}-b`);
@@ -1194,7 +1226,6 @@
                     sScore += rankPoints[selectC.value];
                     kScore += rankPoints[selectD.value];
                 }
-
 
                 // Determine the highest score(s) and corresponding type(s)
                 const scores = { 'D': dScore, 'I': iScore, 'S': sScore, 'K': kScore };
@@ -1210,35 +1241,33 @@
                     }
                 }
 
-                // Display results
-                resultsDisplay.classList.remove('hidden', 'bg-red-100', 'border-red-400', 'text-red-700');
-                resultsDisplay.classList.add('bg-blue-50', 'border-blue-400', 'text-blue-700');
+                let mainResultText = '';
+                let detailedScoresHtml = '';
 
                 if (dominantTypes.length === 1) {
-                    let dominantStyleText = '';
-                    if (dominantTypes[0] === 'D') dominantStyleText = 'Direkteur';
-                    else if (dominantTypes[0] === 'I') dominantStyleText = 'Innoveerder';
-                    else if (dominantTypes[0] === 'S') dominantStyleText = 'Spesialis';
-                    else if (dominantTypes[0] === 'K') dominantStyleText = 'Koördineerder';
-
-                    functioningStyleTypeElement.textContent = dominantStyleText;
-                    resultDetailsElement.innerHTML = `<p>Jou dominante funksioneringstyl is <strong>${dominantStyleText}</strong>.</p>`;
+                    let dominantStyleName = '';
+                    if (dominantTypes[0] === 'D') dominantStyleName = 'Direkteur';
+                    else if (dominantTypes[0] === 'I') dominantStyleName = 'Innoveerder';
+                    else if (dominantTypes[0] === 'S') dominantStyleName = 'Spesialis';
+                    else if (dominantTypes[0] === 'K') dominantStyleName = 'Koördineerder';
+                    mainResultText = dominantStyleName;
+                    detailedScoresHtml = `<p>Jou dominante funksioneringstyl is <strong>${dominantStyleName}</strong>.</p>`;
                 } else {
-                    let dominantStylesTranslated = dominantTypes.map(type => {
+                    let dominantStylesNames = dominantTypes.map(type => {
                         if (type === 'D') return 'Direkteur';
                         if (type === 'I') return 'Innoveerder';
                         if (type === 'S') return 'Spesialis';
                         if (type === 'K') return 'Koördineerder';
                         return type;
                     });
-                    functioningStyleTypeElement.textContent = dominantTypes.join(' / '); // Still show D/I/S/K for brevity
-                    resultDetailsElement.innerHTML = `<p>Jy het 'n kombinasie van funksioneringstyle: <strong>${dominantStylesTranslated.join(', ')}</strong>.</p><p>Oorweeg om die beskrywings hieronder te verken om jou mengsel van voorkeure te verstaan.</p>`;
+                    mainResultText = dominantStylesNames.join(' / ');
+                    detailedScoresHtml = `<p>Jy het 'n kombinasie van funksioneringstyle: <strong>${dominantStylesNames.join(', ')}</strong>.</p><p>Oorweeg om die beskrywings hieronder te verken om jou mengsel van voorkeure te verstaan.</p>`;
                 }
 
-                // Add individual scores to the results display
-                resultDetailsElement.innerHTML += `
+                // Add individual scores to the detailedScoresHtml
+                detailedScoresHtml += `
                     <p class="mt-4"><strong>Tellings:</strong></p>
-                    <ul class="list-disc list-inside mx-auto max-w-md">
+                    <ul>
                         <li><strong>Direkteur (D):</strong> ${dScore}</li>
                         <li><strong>Innoveerder (I):</strong> ${iScore}</li>
                         <li><strong>Spesialis (S):</strong> ${sScore}</li>
@@ -1246,8 +1275,32 @@
                     </ul>
                 `;
 
-                // Scroll to results
-                resultsDisplay.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Send email via EmailJS
+                const serviceID = 'service_n3for6s'; // Your EmailJS Service ID
+                const templateID = 'template_kifuzeo'; // Your EmailJS Template ID
+
+                const templateParams = {
+                    user_name: userName,
+                    user_email: userEmail, // This will be your hardcoded email
+                    assessment_name: "Funksioneringstyl Assessering", // Afrikaans name for the assessment
+                    main_result: mainResultText,
+                    detailed_scores_html: detailedScoresHtml
+                };
+
+                console.log('Attempting to send email with params:', templateParams); // DEBUG: Confirm email send attempt
+                emailjs.send(serviceID, templateID, templateParams)
+                    .then(function(response) {
+                        console.log('EmailJS SUCCESS!', response.status, response.text); // DEBUG: Confirm EmailJS success
+                        showMessage('Jou assessering is suksesvol ingedien!', 'success'); // Afrikaans for "Your assessment has been submitted successfully!"
+                        // Optionally, reset the form after successful submission
+                        form.reset();
+                        userNameInput.value = ''; // Clear name field
+                        // Scroll to the top after submission message
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }, function(error) {
+                        console.log('EmailJS FAILED...', error); // DEBUG: Confirm EmailJS failure
+                        showMessage('Kon assessering nie indien nie. Probeer asseblief weer later.', 'error'); // Afrikaans for "Failed to submit assessment. Please try again later."
+                    });
             });
         });
     </script>
