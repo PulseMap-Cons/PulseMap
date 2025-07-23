@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Funksioneringstyl Assessering - Afrikaans</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Custom CSS for the Inter font */
@@ -13,13 +12,13 @@
         }
         /* Red highlight for unanswered questions on submission error */
         .unanswered-question {
-            border: 2px solid #ef4444; /* Red border */
-            background-color: #fef2f2; /* Light red background */
+            border: 2px solid #ef4444; /* Rooi rand */
+            background-color: #fef2f2; /* Ligrooi agtergrond */
         }
         /* Subtle highlight for the next question to focus on during filling */
         .next-focus-question {
-            border: 2px solid #f97316; /* Orange border */
-            background-color: #fff7ed; /* Light orange background */
+            border: 2px solid #f97316; /* Oranje rand */
+            background-color: #fff7ed; /* Ligoranje agtergrond */
         }
         /* Style for disabled select options (though not dynamically disabled by JS anymore) */
         .rank-select option:disabled {
@@ -27,7 +26,7 @@
         }
         /* Style for real-time error message */
         .question-error-message {
-            color: #dc2626; /* Red text */
+            color: #dc2626; /* Rooi teks */
             font-size: 0.875rem; /* text-sm */
             margin-top: 0.5rem;
             text-align: left;
@@ -38,1311 +37,436 @@
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            padding: 1rem 2rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px (0, 0, 0, 0.1);
+            padding: 15px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             z-index: 1000;
             display: none; /* Hidden by default */
-            font-weight: bold;
+            font-weight: 500;
             text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
         }
         .message-box.success {
-            background-color: #d1fae5; /* green-100 */
-            color: #065f46; /* green-800 */
-            border: 1px solid #34d399; /* green-400 */
+            background-color: #d1fae5; /* Groen-100 */
+            color: #065f46; /* Groen-800 */
+            border: 1px solid #34d399; /* Groen-400 */
         }
         .message-box.error {
-            background-color: #fee2e2; /* red-100 */
-            color: #991b1b; /* red-800 */
-            border: 1px solid #f87171; /* red-400 */
+            background-color: #fee2e2; /* Rooi-100 */
+            color: #991b1b; /* Rooi-800 */
+            border: 1px solid #f87171; /* Rooi-400 */
+        }
+        .message-box.show {
+            opacity: 1;
         }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
-    <!-- Header Section - Reusing the same header structure as index.html -->
     <header class="bg-white shadow-md py-4">
         <div class="container mx-auto px-4 flex justify-center items-center">
-            <!-- Business Logo as Title -->
-            <img src="https://i.imgur.com/Zx34Iky.png" alt="Jou Besigheidslogo" class="h-24 sm:h-32 md:h-40 w-full object-contain rounded-lg shadow-sm">
+            <img src="https://i.imgur.com/Zx34Iky.png" alt="PulseMap Logo" class="h-10">
         </div>
     </header>
 
-    <!-- Custom Message Box -->
-    <div id="messageBox" class="message-box"></div>
+    <main class="flex-grow container mx-auto p-4 sm:p-6 lg:p-8">
+        <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md mb-8">
+            <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Funksioneringstyl Assessering</h1>
+            <p class="text-gray-600 text-center mb-6">Rangskik elke stelling in volgorde van hoe dit op jou van toepassing is (1 = minste, 4 = meeste). Ken elke rang (1, 2, 3, 4) presies een keer per vraestel toe.</p>
 
-    <!-- Main Content Section for the Assessment -->
-    <main class="flex-grow container mx-auto px-4 py-8 flex flex-col items-center justify-center">
-        <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-2xl text-center">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 mb-4 leading-tight">
-                Funksioneringstyl Assessering
-            </h1>
-            <h2 class="text-2xl md:text-3xl font-semibold text-indigo-600 mb-6">
-                Afrikaanse Weergawe
-            </h2>
-            <p class="text-lg text-gray-700 mb-8 text-left">
-                Welkom by die Funksioneringstyl Assessering. Hierdie vraelys ondersoek jou voorkeur maniere van werk, samewerking en taakbenadering. Rangskik die antwoorde vir elke vraag van 1 (Meeste soos jy) tot 4 (Minste soos jy). Elke rang (1, 2, 3, 4) moet presies een keer per vraag gebruik word. Jou antwoorde sal insigte gee in jou unieke funksioneringstyl binne verskillende kontekste.
-            </p>
-
-            <!-- User Information Form -->
-            <div id="userInfoSection" class="mb-8 p-6 bg-blue-50 rounded-lg shadow-inner text-left">
-                <h3 class="text-xl font-semibold text-blue-800 mb-4">Jou Besonderhede</h3>
-                <div class="mb-4">
-                    <label for="userName" class="block text-gray-700 text-sm font-bold mb-2">Jou Naam:</label>
-                    <input type="text" id="userName" name="userName" placeholder="Voer jou volle naam in"
-                           class="shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-indigo-500" required>
-                </div>
-            </div>
-
-            <!-- Assessment Questions Form -->
-            <form id="assessmentForm" class="border-t border-gray-200 pt-8 mt-8 text-left">
-
-                <!-- Question 1 -->
-                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q1-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">1. Wanneer jy 'n nuwe projek begin, wat is jou eerste instink?</p>
-                    <div class="mb-2 flex items-center">
-                        <label for="q1-a" class="flex-grow text-gray-700">a) Spring dadelik in en begin met aksie</label>
-                        <select id="q1-a" name="q1-a" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q1-b" class="flex-grow text-gray-700">b) Praat met mense om hulle menings te kry</label>
-                        <select id="q1-b" name="q1-b" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q1-c" class="flex-grow text-gray-700">c) Maak 'n gedetailleerde plan voordat jy begin</label>
-                        <select id="q1-c" name="q1-c" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q1-d" class="flex-grow text-gray-700">d) Ondersoek alle moontlike risiko's en uitkomste</label>
-                        <select id="q1-d" name="q1-d" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div id="q1-error" class="question-error-message hidden"></div>
+            <form id="assessmentForm" class="space-y-6">
+                <div class="mb-6">
+                    <label for="userName" class="block text-lg font-medium text-gray-700 mb-2">Jou Naam:</label>
+                    <input type="text" id="userName" name="userName" required
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-lg">
                 </div>
 
-                <!-- Question 2 -->
-                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q2-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">2. In 'n spanvergadering verkies jy om:</p>
-                    <div class="mb-2 flex items-center">
-                        <label for="q2-a" class="flex-grow text-gray-700">a) Die leiding te neem en besluite te forseer</label>
-                        <select id="q2-a" name="q2-a" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
+                <div class="question-set p-4 border border-gray-200 rounded-md bg-gray-50" data-set="1">
+                    <h3 class="font-bold text-gray-800 mb-4">Vraestel 1</h3>
+                    <div class="statement-group space-y-3">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between statement-row" data-type="D">
+                            <label class="text-gray-700 mb-1 sm:mb-0 sm:w-3/4">Ek geniet dit om die leiding te neem en ander te lei.</label>
+                            <select class="rank-select mt-1 sm:mt-0 sm:w-1/4 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" name="q1_rank_d" required>
+                                <option value="" disabled selected>Kies Rang</option>
+                                <option value="1">1 (Minste soos ek)</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4 (Mees soos ek)</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between statement-row" data-type="M">
+                            <label class="text-gray-700 mb-1 sm:mb-0 sm:w-3/4">Ek is entoesiasties en geniet dit om mense te motiveer.</label>
+                            <select class="rank-select mt-1 sm:mt-0 sm:w-1/4 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" name="q1_rank_m" required>
+                                <option value="" disabled selected>Kies Rang</option>
+                                <option value="1">1 (Minste soos ek)</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4 (Mees soos ek)</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between statement-row" data-type="S">
+                            <label class="text-gray-700 mb-1 sm:mb-0 sm:w-3/4">Ek verkies 'n bestendige pas en waardeer stabiliteit.</label>
+                            <select class="rank-select mt-1 sm:mt-0 sm:w-1/4 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" name="q1_rank_s" required>
+                                <option value="" disabled selected>Kies Rang</option>
+                                <option value="1">1 (Minste soos ek)</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4 (Mees soos ek)</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between statement-row" data-type="C">
+                            <label class="text-gray-700 mb-1 sm:mb-0 sm:w-3/4">Ek is analities en fokus op akkuraatheid en kwaliteit.</label>
+                            <select class="rank-select mt-1 sm:mt-0 sm:w-1/4 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" name="q1_rank_c" required>
+                                <option value="" disabled selected>Kies Rang</option>
+                                <option value="1">1 (Minste soos ek)</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4 (Mees soos ek)</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q2-b" class="flex-grow text-gray-700">b) Te verseker dat almal betrokke voel</label>
-                        <select id="q2-b" name="q2-b" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q2-c" class="flex-grow text-gray-700">c) Vrae te vra om alles duidelik te verstaan</label>
-                        <select id="q2-c" name="q2-c" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q2-d" class="flex-grow text-gray-700">d) Data en feite voor te lê om besluite te ondersteun</label>
-                        <select id="q2-d" name="q2-d" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div id="q2-error" class="question-error-message hidden"></div>
+                    <div class="question-error-message hidden mt-4">Ken asseblief rangorde 1, 2, 3 en 4 presies een keer toe.</div>
                 </div>
 
-                <!-- Question 3 -->
-                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q3-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">3. Wanneer jy onder druk is, neig jy om:</p>
-                    <div class="mb-2 flex items-center">
-                        <label for="q3-a" class="flex-grow text-gray-700">a) Meer assertief en direkter te word</label>
-                        <select id="q3-a" name="q3-a" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
+                <div class="question-set p-4 border border-gray-200 rounded-md bg-gray-50" data-set="2">
+                    <h3 class="font-bold text-gray-800 mb-4">Vraestel 2</h3>
+                    <div class="statement-group space-y-3">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between statement-row" data-type="D">
+                            <label class="text-gray-700 mb-1 sm:mb-0 sm:w-3/4">Ek is direk en selfgeldend in my kommunikasie.</label>
+                            <select class="rank-select mt-1 sm:mt-0 sm:w-1/4 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" name="q2_rank_d" required>
+                                <option value="" disabled selected>Kies Rang</option>
+                                <option value="1">1 (Minste soos ek)</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4 (Mees soos ek)</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between statement-row" data-type="M">
+                            <label class="text-gray-700 mb-1 sm:mb-0 sm:w-3/4">Ek is uitgaande en geniet sosiale interaksie.</label>
+                            <select class="rank-select mt-1 sm:mt-0 sm:w-1/4 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" name="q2_rank_m" required>
+                                <option value="" disabled selected>Kies Rang</option>
+                                <option value="1">1 (Minste soos ek)</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4 (Mees soos ek)</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between statement-row" data-type="S">
+                            <label class="text-gray-700 mb-1 sm:mb-0 sm:w-3/4">Ek is geduldig en 'n goeie luisteraar.</label>
+                            <select class="rank-select mt-1 sm:mt-0 sm:w-1/4 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" name="q2_rank_s" required>
+                                <option value="" disabled selected>Kies Rang</option>
+                                <option value="1">1 (Minste soos ek)</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4 (Mees soos ek)</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between statement-row" data-type="C">
+                            <label class="text-gray-700 mb-1 sm:mb-0 sm:w-3/4">Ek volg reëls en prosedures noukeurig.</label>
+                            <select class="rank-select mt-1 sm:mt-0 sm:w-1/4 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" name="q2_rank_c" required>
+                                <option value="" disabled selected>Kies Rang</option>
+                                <option value="1">1 (Minste soos ek)</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4 (Mees soos ek)</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q3-b" class="flex-grow text-gray-700">b) Ondersteuning by ander te soek</label>
-                        <select id="q3-b" name="q3-b" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q3-c" class="flex-grow text-gray-700">c) Stadiger en meer versigtig te werk</label>
-                        <select id="q3-c" name="q3-c" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q3-d" class="flex-grow text-gray-700">d) Alles dubbel te kontroleer vir akkuraatheid</label>
-                        <select id="q3-d" name="q3-d" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div id="q3-error" class="question-error-message hidden"></div>
+                    <div class="question-error-message hidden mt-4">Ken asseblief rangorde 1, 2, 3 en 4 presies een keer toe.</div>
                 </div>
 
-                <!-- Question 4 -->
-                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q4-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">4. Jou ideale werksomgewing is een waar jy:</p>
-                    <div class="mb-2 flex items-center">
-                        <label for="q4-a" class="flex-grow text-gray-700">a) Vinnige resultate kan behaal</label>
-                        <select id="q4-a" name="q4-a" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
+                <div class="question-set p-4 border border-gray-200 rounded-md bg-gray-50" data-set="3">
+                    <h3 class="font-bold text-gray-800 mb-4">Vraestel 3</h3>
+                    <div class="statement-group space-y-3">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between statement-row" data-type="D">
+                            <label class="text-gray-700 mb-1 sm:mb-0 sm:w-3/4">Ek is resultaatgerig en gedrewe om doelwitte te bereik.</label>
+                            <select class="rank-select mt-1 sm:mt-0 sm:w-1/4 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" name="q3_rank_d" required>
+                                <option value="" disabled selected>Kies Rang</option>
+                                <option value="1">1 (Minste soos ek)</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4 (Mees soos ek)</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between statement-row" data-type="M">
+                            <label class="text-gray-700 mb-1 sm:mb-0 sm:w-3/4">Ek is optimisties en fokus op positiewe moontlikhede.</label>
+                            <select class="rank-select mt-1 sm:mt-0 sm:w-1/4 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" name="q3_rank_m" required>
+                                <option value="" disabled selected>Kies Rang</option>
+                                <option value="1">1 (Minste soos ek)</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4 (Mees soos ek)</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between statement-row" data-type="S">
+                            <label class="text-gray-700 mb-1 sm:mb-0 sm:w-3/4">Ek is kalm onder druk en verkies 'n stabiele omgewing.</label>
+                            <select class="rank-select mt-1 sm:mt-0 sm:w-1/4 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" name="q3_rank_s" required>
+                                <option value="" disabled selected>Kies Rang</option>
+                                <option value="1">1 (Minste soos ek)</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4 (Mees soos ek)</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between statement-row" data-type="C">
+                            <label class="text-gray-700 mb-1 sm:mb-0 sm:w-3/4">Ek is presies en gee noukeurig aandag aan besonderhede.</label>
+                            <select class="rank-select mt-1 sm:mt-0 sm:w-1/4 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" name="q3_rank_c" required>
+                                <option value="" disabled selected>Kies Rang</option>
+                                <option value="1">1 (Minste soos ek)</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4 (Mees soos ek)</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q4-b" class="flex-grow text-gray-700">b) Met ander mense kan saamwerk</label>
-                        <select id="q4-b" name="q4-b" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q4-c" class="flex-grow text-gray-700">c) In 'n rustige, stabiele atmosfeer kan werk</label>
-                        <select id="q4-c" name="q4-c" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q4-d" class="flex-grow text-gray-700">d) Hoë standaarde van kwaliteit kan handhaaf</label>
-                        <select id="q4-d" name="q4-d" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div id="q4-error" class="question-error-message hidden"></div>
+                    <div class="question-error-message hidden mt-4">Ken asseblief rangorde 1, 2, 3 en 4 presies een keer toe.</div>
                 </div>
 
-                <!-- Question 5 -->
-                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q5-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">5. Wanneer jy 'n besluit moet neem, baseer jy dit gewoonlik op:</p>
-                    <div class="mb-2 flex items-center">
-                        <label for="q5-a" class="flex-grow text-gray-700">a) Jou intuïsie en die behoefte aan vinnige aksie</label>
-                        <select id="q5-a" name="q5-a" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
+                <div class="question-set p-4 border border-gray-200 rounded-md bg-gray-50" data-set="4">
+                    <h3 class="font-bold text-gray-800 mb-4">Vraestel 4</h3>
+                    <div class="statement-group space-y-3">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between statement-row" data-type="D">
+                            <label class="text-gray-700 mb-1 sm:mb-0 sm:w-3/4">Ek floreer op uitdagings en kompetisie.</label>
+                            <select class="rank-select mt-1 sm:mt-0 sm:w-1/4 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" name="q4_rank_d" required>
+                                <option value="" disabled selected>Kies Rang</option>
+                                <option value="1">1 (Minste soos ek)</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4 (Mees soos ek)</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between statement-row" data-type="M">
+                            <label class="text-gray-700 mb-1 sm:mb-0 sm:w-3/4">Ek is oorredend en geniet dit om ander te beïnvloed.</label>
+                            <select class="rank-select mt-1 sm:mt-0 sm:w-1/4 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" name="q4_rank_m" required>
+                                <option value="" disabled selected>Kies Rang</option>
+                                <option value="1">1 (Minste soos ek)</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4 (Mees soos ek)</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between statement-row" data-type="S">
+                            <label class="text-gray-700 mb-1 sm:mb-0 sm:w-3/4">Ek is betroubaar en verkies om take deeglik te voltooi.</label>
+                            <select class="rank-select mt-1 sm:mt-0 sm:w-1/4 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" name="q4_rank_s" required>
+                                <option value="" disabled selected>Kies Rang</option>
+                                <option value="1">1 (Minste soos ek)</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4 (Mees soos ek)</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between statement-row" data-type="C">
+                            <label class="text-gray-700 mb-1 sm:mb-0 sm:w-3/4">Ek is georganiseerd en sistematies in my benadering.</label>
+                            <select class="rank-select mt-1 sm:mt-0 sm:w-1/4 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" name="q4_rank_c" required>
+                                <option value="" disabled selected>Kies Rang</option>
+                                <option value="1">1 (Minste soos ek)</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4 (Mees soos ek)</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q5-b" class="flex-grow text-gray-700">b) Wat die beste vir almal betrokke sal wees</label>
-                        <select id="q5-b" name="q5-b" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q5-c" class="flex-grow text-gray-700">c) Bewese metodes wat voorheen gewerk het</label>
-                        <select id="q5-c" name="q5-c" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q5-d" class="flex-grow text-gray-700">d) Deeglike navorsing en analise</label>
-                        <select id="q5-d" name="q5-d" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div id="q5-error" class="question-error-message hidden"></div>
+                    <div class="question-error-message hidden mt-4">Ken asseblief rangorde 1, 2, 3 en 4 presies een keer toe.</div>
                 </div>
 
-                <!-- Question 6 -->
-                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q6-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">6. Mense beskryf jou gewoonlik as iemand wat:</p>
-                    <div class="mb-2 flex items-center">
-                        <label for="q6-a" class="flex-grow text-gray-700">a) Doelgerig en kompeterend is</label>
-                        <select id="q6-a" name="q6-a" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
+                <div class="question-set p-4 border border-gray-200 rounded-md bg-gray-50" data-set="5">
+                    <h3 class="font-bold text-gray-800 mb-4">Vraestel 5</h3>
+                    <div class="statement-group space-y-3">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between statement-row" data-type="D">
+                            <label class="text-gray-700 mb-1 sm:mb-0 sm:w-3/4">Ek is beslissend en vinnig om besluite te neem.</label>
+                            <select class="rank-select mt-1 sm:mt-0 sm:w-1/4 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" name="q5_rank_d" required>
+                                <option value="" disabled selected>Kies Rang</option>
+                                <option value="1">1 (Minste soos ek)</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4 (Mees soos ek)</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between statement-row" data-type="M">
+                            <label class="text-gray-700 mb-1 sm:mb-0 sm:w-3/4">Ek is positief en geniet dit om ander op te hef.</label>
+                            <select class="rank-select mt-1 sm:mt-0 sm:w-1/4 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" name="q5_rank_m" required>
+                                <option value="" disabled selected>Kies Rang</option>
+                                <option value="1">1 (Minste soos ek)</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4 (Mees soos ek)</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between statement-row" data-type="S">
+                            <label class="text-gray-700 mb-1 sm:mb-0 sm:w-3/4">Ek is samewerkend en verkies om in spanne te werk.</label>
+                            <select class="rank-select mt-1 sm:mt-0 sm:w-1/4 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" name="q5_rank_s" required>
+                                <option value="" disabled selected>Kies Rang</option>
+                                <option value="1">1 (Minste soos ek)</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4 (Mees soos ek)</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between statement-row" data-type="C">
+                            <label class="text-gray-700 mb-1 sm:mb-0 sm:w-3/4">Ek is sistematies en volg 'n logiese proses.</label>
+                            <select class="rank-select mt-1 sm:mt-0 sm:w-1/4 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" name="q5_rank_c" required>
+                                <option value="" disabled selected>Kies Rang</option>
+                                <option value="1">1 (Minste soos ek)</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4 (Mees soos ek)</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q6-b" class="flex-grow text-gray-700">b) Vriendelik en uitnodigend is</label>
-                        <select id="q6-b" name="q6-b" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q6-c" class="flex-grow text-gray-700">c) Betroubaar en geduldig is</label>
-                        <select id="q6-c" name="q6-c" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q6-d" class="flex-grow text-gray-700">d) Presies en deurdag is</label>
-                        <select id="q6-d" name="q6-d" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div id="q6-error" class="question-error-message hidden"></div>
+                    <div class="question-error-message hidden mt-4">Ken asseblief rangorde 1, 2, 3 en 4 presies een keer toe.</div>
                 </div>
 
-                <!-- Question 7 -->
-                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q7-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">7. In konflik situasies verkies jy om:</p>
-                    <div class="mb-2 flex items-center">
-                        <label for="q7-a" class="flex-grow text-gray-700">a) Die situasie direk aan te spreek</label>
-                        <select id="q7-a" name="q7-a" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q7-b" class="flex-grow text-gray-700">b) Te probeer om almal tevrede te stel</label>
-                        <select id="q7-b" name="q7-b" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q7-c" class="flex-grow text-gray-700">c) Konflik te vermy totdat dit bedaar</label>
-                        <select id="q7-c" name="q7-c" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q7-d" class="flex-grow text-gray-700">d) Feite te versamel voordat jy reageer</label>
-                        <select id="q7-d" name="q7-d" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div id="q7-error" class="question-error-message hidden"></div>
-                </div>
-
-                <!-- Question 8 -->
-                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q8-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">8. Jou benadering tot verandering is gewoonlik:</p>
-                    <div class="mb-2 flex items-center">
-                        <label for="q8-a" class="flex-grow text-gray-700">a) Verwelkom dit as 'n geleentheid</label>
-                        <select id="q8-a" name="q8-a" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q8-b" class="flex-grow text-gray-700">b) Bekommerd oor hoe dit ander sal affekteer</label>
-                        <select id="q8-b" name="q8-b" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q8-c" class="flex-grow text-gray-700">c) Versigtig en verkies geleidelike aanpassings</label>
-                        <select id="q8-c" name="q8-c" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q8-d" class="flex-grow text-gray-700">d) Skepties totdat die voordele bewys is</label>
-                        <select id="q8-d" name="q8-d" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div id="q8-error" class="question-error-message hidden"></div>
-                </div>
-
-                <!-- Question 9 -->
-                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q9-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">9. Wanneer jy in 'n span werk, neem jy gewoonlik die rol aan van:</p>
-                    <div class="mb-2 flex items-center">
-                        <label for="q9-a" class="flex-grow text-gray-700">a) Die leier wat rigting gee</label>
-                        <select id="q9-a" name="q9-a" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q9-b" class="flex-grow text-gray-700">b) Die een wat spanharmonie bevorder</label>
-                        <select id="q9-b" name="q9-b" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q9-c" class="flex-grow text-gray-700">c) Die ondersteunende spanlid wat konsekwent bydra</label>
-                        <select id="q9-c" name="q9-c" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q9-d" class="flex-grow text-gray-700">d) Die kwaliteitskontrole wat standaarde handhaaf</label>
-                        <select id="q9-d" name="q9-d" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div id="q9-error" class="question-error-message hidden"></div>
-                </div>
-
-                <!-- Question 10 -->
-                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q10-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">10. Jou kommunikasiestyl is gewoonlik:</p>
-                    <div class="mb-2 flex items-center">
-                        <label for="q10-a" class="flex-grow text-gray-700">a) Direkt en tot die punt</label>
-                        <select id="q10-a" name="q10-a" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q10-b" class="flex-grow text-gray-700">b) Warm en persoonlik</label>
-                        <select id="q10-b" name="q10-b" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q10-c" class="flex-grow text-gray-700">c) Geduldig en bedagsaam</label>
-                        <select id="q10-c" name="q10-c" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q10-d" class="flex-grow text-gray-700">d) Presies en gedetailleerd</label>
-                        <select id="q10-d" name="q10-d" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div id="q10-error" class="question-error-message hidden"></div>
-                </div>
-
-                <!-- Question 11 -->
-                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q11-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">11. Wanneer jy 'n fout maak, is jou eerste reaksie om:</p>
-                    <div class="mb-2 flex items-center">
-                        <label for="q11-a" class="flex-grow text-gray-700">a) Vinnig 'n oplossing te vind en voort te gaan</label>
-                        <select id="q11-a" name="q11-a" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q11-b" class="flex-grow text-gray-700">b) Te praat oor hoe jy voel daaroor</label>
-                        <select id="q11-b" name="q11-b" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q11-c" class="flex-grow text-gray-700">c) Dit stil-stil reg te maak</label>
-                        <select id="q11-c" name="q11-c" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q11-d" class="flex-grow text-gray-700">d) Die oorsaak deeglik te ontleed</label>
-                        <select id="q11-d" name="q11-d" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div id="q11-error" class="question-error-message hidden"></div>
-                </div>
-
-                <!-- Question 12 -->
-                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q12-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">12. Jou motivering kom hoofsaaklik van:</p>
-                    <div class="mb-2 flex items-center">
-                        <label for="q12-a" class="flex-grow text-gray-700">a) Die bereiking van doelwitte en oorwinnings</label>
-                        <select id="q12-a" name="q12-a" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q12-b" class="flex-grow text-gray-700">b) Erkenning en waardering van ander</label>
-                        <select id="q12-b" name="q12-b" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q12-c" class="flex-grow text-gray-700">c) Sekuriteit en stabiliteit</label>
-                        <select id="q12-c" name="q12-c" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q12-d" class="flex-grow text-gray-700">d) Die doen van werk reg die eerste keer</label>
-                        <select id="q12-d" name="q12-d" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div id="q12-error" class="question-error-message hidden"></div>
-                </div>
-
-                <!-- Question 13 -->
-                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q13-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">13. In 'n krisis situasie sal jy waarskynlik:</p>
-                    <div class="mb-2 flex items-center">
-                        <label for="q13-a" class="flex-grow text-gray-700">a) Vinnig aksie neem om die probleem op te los</label>
-                        <select id="q13-a" name="q13-a" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q13-b" class="flex-grow text-gray-700">b) Mense bymekaar bring vir ondersteuning</label>
-                        <select id="q13-b" name="q13-b" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q13-c" class="flex-grow text-gray-700">c) Kalm bly en wag vir duidelike instruksies</label>
-                        <select id="q13-c" name="q13-c" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q13-d" class="flex-grow text-gray-700">d) Alle inligting versamel voordat jy optree</label>
-                        <select id="q13-d" name="q13-d" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div id="q13-error" class="question-error-message hidden"></div>
-                </div>
-
-                <!-- Question 14 -->
-                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q14-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">14. Wanneer jy nuwe mense ontmoet, is jy gewoonlik:</p>
-                    <div class="mb-2 flex items-center">
-                        <label for="q14-a" class="flex-grow text-gray-700">a) Selfversekerd en neem beheer van die gesprek</label>
-                        <select id="q14-a" name="q14-a" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q14-b" class="flex-grow text-gray-700">b) Vriendelik en belangstellend in hulle</label>
-                        <select id="q14-b" name="q14-b" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q14-c" class="flex-grow text-gray-700">c) Beleefd maar afwagtend</label>
-                        <select id="q14-c" name="q14-c" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q14-d" class="flex-grow text-gray-700">d) Professioneel en formeel</label>
-                        <select id="q14-d" name="q14-d" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div id="q14-error" class="question-error-message hidden"></div>
-                </div>
-
-                <!-- Question 15 -->
-                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q15-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">15. Jou benadering tot tydbestuur is:</p>
-                    <div class="mb-2 flex items-center">
-                        <label for="q15-a" class="flex-grow text-gray-700">a) Fokus op prioriteite en druk deur</label>
-                        <select id="q15-a" name="q15-a" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q15-b" class="flex-grow text-gray-700">b) Maak tyd vir mense en verhoudings</label>
-                        <select id="q15-b" name="q15-b" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q15-c" class="flex-grow text-gray-700">c) Hou by gereelde roetines en skedules</label>
-                        <select id="q15-c" name="q15-c" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q15-d" class="flex-grow text-gray-700">d) Beplan alles noukeurig van tevore</label>
-                        <select id="q15-d" name="q15-d" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div id="q15-error" class="question-error-message hidden"></div>
-                </div>
-
-                <!-- Question 16 -->
-                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q16-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">16. Wanneer jy gekritiseer word, reageer jy gewoonlik deur:</p>
-                    <div class="mb-2 flex items-center">
-                        <label for="q16-a" class="flex-grow text-gray-700">a) Terug te veg of jou standpunt te verdedig</label>
-                        <select id="q16-a" name="q16-a" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q16-b" class="flex-grow text-gray-700">b) Bekommerd te wees oor wat ander dink</label>
-                        <select id="q16-b" name="q16-b" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q16-c" class="flex-grow text-gray-700">c) Die kritiek te aanvaar en aan te beweeg</label>
-                        <select id="q16-c" name="q16-c" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q16-d" class="flex-grow text-gray-700">d) Die kritiek te analiseer om te verstaan hoe om te verbeter</label>
-                        <select id="q16-d" name="q16-d" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div id="q16-error" class="question-error-message hidden"></div>
-                </div>
-
-                <!-- Question 17 -->
-                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q17-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">17. Jou natuurlike reaksie op reëls en prosedures is om:</p>
-                    <div class="mb-2 flex items-center">
-                        <label for="q17-a" class="flex-grow text-gray-700">a) Dit te bevraagteken as dit nie sin maak nie</label>
-                        <select id="q17-a" name="q17-a" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q17-b" class="flex-grow text-gray-700">b) Flexibel te wees as dit ander mense help</label>
-                        <select id="q17-b" name="q17-b" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</slect>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q17-c" class="flex-grow text-gray-700">c) Dit te volg om stabiliteit te handhaaf</label>
-                        <select id="q17-c" name="q17-c" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q17-d" class="flex-grow text-gray-700">d) Dit noukeurig te bestudeer en te implementeer</label>
-                        <select id="q17-d" name="q17-d" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div id="q17-error" class="question-error-message hidden"></div>
-                </div>
-
-                <!-- Question 18 -->
-                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q18-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">18. Wanneer jy bydra tot 'n bespreking, verkies jy om:</p>
-                    <div class="mb-2 flex items-center">
-                        <label for="q18-a" class="flex-grow text-gray-700">a) Jou punt duidelik te maak</label>
-                        <select id="q18-a" name="q18-a" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q18-b" class="flex-grow text-gray-700">b) Almal 'n kans te gee om te praat</label>
-                        <select id="q18-b" name="q18-b" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q18-c" class="flex-grow text-gray-700">c) Luister meer as wat jy praat</label>
-                        <select id="q18-c" name="q18-c" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q18-d" class="flex-grow text-gray-700">d) Vrae vra om duidelikheid te kry</label>
-                        <select id="q18-d" name="q18-d" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div id="q18-error" class="question-error-message hidden"></div>
-                </div>
-
-                <!-- Question 19 -->
-                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q19-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">19. Jou grootste vrees in die werkplek is waarskynlik:</p>
-                    <div class="mb-2 flex items-center">
-                        <label for="q19-a" class="flex-grow text-gray-700">a) Om beheer te verloor of misluk</label>
-                        <select id="q19-a" name="q19-a" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q19-b" class="flex-grow text-gray-700">b) Om verwerp of geïsoleer te word</label>
-                        <select id="q19-b" name="q19-b" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q19-c" class="flex-grow text-gray-700">c) Om oorhaastige veranderinge te moet hanteer</label>
-                        <select id="q19-c" name="q19-c" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q19-d" class="flex-grow text-gray-700">d) Om foute te maak of kritiek te ontvang</label>
-                        <select id="q19-d" name="q19-d" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div id="q19-error" class="question-error-message hidden"></div>
-                </div>
-
-                <!-- Question 20 -->
-                <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q20-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">20. Wanneer jy 'n taak voltooi het, voel jy die beste wanneer:</p>
-                    <div class="mb-2 flex items-center">
-                        <label for="q20-a" class="flex-grow text-gray-700">a) Jy die teiken oorskry het</label>
-                        <select id="q20-a" name="q20-a" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q20-b" class="flex-grow text-gray-700">b) Almal tevrede is met die resultaat</label>
-                        <select id="q20-b" name="q20-b" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q20-c" class="flex-grow text-gray-700">c) Dit betyds gelei het tot stabiliteit en sekuriteit</label>
-                        <select id="q20-c" name="q20-c" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex items-center">
-                        <label for="q20-d" class="flex-grow text-gray-700">d) Dit aan hoë standaarde voldoen het</label>
-                        <select id="q20-d" name="q20-d" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rang</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div id="q20-error" class="question-error-message hidden"></div>
-                </div>
-
-                <!-- Submit Button -->
-                <div class="mt-8 text-center">
-                    <button type="submit"
-                            class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transform transition duration-300 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
+                <div class="text-center mt-8">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-xl transition duration-300 ease-in-out transform hover:scale-105">
                         Dien Assessering In
                     </button>
                 </div>
             </form>
+
+            <div id="resultsDisplay" class="hidden mt-10 p-6 border-2 rounded-lg text-center">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Jou Funksioneringstyl Tellings:</h2>
+                <div id="resultDetails" class="text-lg text-gray-700 leading-relaxed space-y-2">
+                    </div>
+            </div>
         </div>
     </main>
 
-    <!-- Footer Section - Simple footer -->
-    <footer class="bg-gray-800 text-white text-center p-4 mt-8">
-        <p>&copy; 2023 Funksioneringstyl Assessering. Alle regte voorbehou.</p>
+    <footer class="bg-gray-800 text-white py-6">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-sm">© 2024 PulseMap. Alle regte voorbehou.</p>
+        </div>
     </footer>
 
-    <!-- EmailJS CDN -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript" src="https://cdn.emailjs.com/sdk/2.6.4/email.min.js"></script>
     <script type="text/javascript">
         // Initialize EmailJS with your Public Key
-        // Replace 'Pmd3fgupxDv25ALjZ' with your actual EmailJS Public Key
-        emailjs.init("Pmd3fgupxDv25ALjZ"); // IMPORTANT: Replace with your actual Public Key
+        emailjs.init("Pmd3fgupxDv25ALjZ"); // Updated Public Key
 
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('assessmentForm');
+            const resultsDisplay = document.getElementById('resultsDisplay');
+            const resultDetailsElement = document.getElementById('resultDetails');
             const userNameInput = document.getElementById('userName');
-            const messageBox = document.getElementById('messageBox');
-            const questionBlocks = document.querySelectorAll('.question-block'); // Get all question blocks
+            const messageBox = document.createElement('div');
+            messageBox.classList.add('message-box');
+            document.body.appendChild(messageBox);
 
             function showMessage(message, type) {
                 messageBox.textContent = message;
-                messageBox.className = `message-box ${type}`; // Add type class for styling
-                messageBox.style.display = 'block';
-                // Hide after 5 seconds
+                messageBox.className = 'message-box show ' + type;
                 setTimeout(() => {
-                    messageBox.style.display = 'none';
-                }, 5000);
+                    messageBox.classList.remove('show');
+                }, 5000); // Message disappears after 5 seconds
             }
 
-            // Function to validate if a question's ranks are unique (1, 2, 3, 4)
-            function isQuestionRankedCorrectly(questionNumber) {
-                const ranks = [];
-                const selects = document.querySelectorAll(`#q${questionNumber}-block .rank-select`);
-                let allSelected = true;
+            const questionSets = document.querySelectorAll('.question-set');
 
+            questionSets.forEach(set => {
+                const selects = set.querySelectorAll('.rank-select');
                 selects.forEach(select => {
-                    if (select.value === "") {
-                        allSelected = false;
-                    } else {
-                        ranks.push(select.value);
-                    }
-                });
-
-                if (!allSelected) {
-                    return false; // Not all options ranked
-                }
-
-                // Check for unique ranks (1, 2, 3, 4)
-                const uniqueRanks = new Set(ranks);
-                return uniqueRanks.size === 4 && ['1', '2', '3', '4'].every(r => uniqueRanks.has(r));
-            }
-
-            // Function to display/hide real-time error message for a specific question
-            function updateQuestionError(questionNumber) {
-                const errorDiv = document.getElementById(`q${questionNumber}-error`);
-                const questionBlock = document.getElementById(`q${questionNumber}-block`);
-                if (!errorDiv || !questionBlock) return;
-
-                if (!isQuestionRankedCorrectly(questionNumber)) {
-                    errorDiv.textContent = "Elke rang (1, 2, 3, 4) moet presies een keer gebruik word per vraag.";
-                    errorDiv.classList.remove('hidden');
-                    questionBlock.classList.add('unanswered-question'); // Add red highlight
-                } else {
-                    errorDiv.classList.add('hidden');
-                    errorDiv.textContent = ""; // Clear message
-                    questionBlock.classList.remove('unanswered-question'); // Remove red highlight
-                }
-            }
-
-            // Function to highlight the first invalid question (on submit)
-            function highlightFirstInvalidQuestionOnSubmit() {
-                let firstInvalidBlock = null;
-                let allQuestionsCorrectlyRanked = true;
-
-                // First, remove ALL highlights (both subtle and red) and all individual error messages
-                questionBlocks.forEach((block, index) => {
-                    block.classList.remove('unanswered-question', 'next-focus-question');
-                    const errorDiv = document.getElementById(`q${index + 1}-error`);
-                    if (errorDiv) {
-                        errorDiv.classList.add('hidden');
-                        errorDiv.textContent = "";
-                    }
-                });
-
-                // Iterate through questions to find truly unranked/incorrectly ranked ones and apply red highlight
-                for (let i = 1; i <= 20; i++) {
-                    const questionBlock = document.getElementById(`q${i}-block`);
-                    if (!isQuestionRankedCorrectly(i)) {
-                        allQuestionsCorrectlyRanked = false;
-                        questionBlock.classList.add('unanswered-question'); // Add red highlight
-                        if (!firstInvalidBlock) {
-                            firstInvalidBlock = questionBlock; // Mark the first one found
-                        }
-                    }
-                }
-
-                if (!allQuestionsCorrectlyRanked) {
-                    // If there are unranked/incorrectly ranked questions, scroll to the first red one
-                    if (firstInvalidBlock) {
-                        firstInvalidBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
-                    return true; // Indicates unranked/incorrectly ranked questions exist
-                }
-                return false; // All questions are correctly ranked
-            }
-
-            // Add change event listeners to all rank select dropdowns for real-time validation and scrolling
-            document.querySelectorAll('.rank-select').forEach(select => {
-                select.addEventListener('change', () => {
-                    const questionName = select.name;
-                    const questionNumber = parseInt(questionName.split('-')[0].replace('q', ''));
-
-                    // Validate the current question and update its error message
-                    updateQuestionError(questionNumber);
-
-                    // If the current question is now correctly ranked, try to jump to the next
-                    if (isQuestionRankedCorrectly(questionNumber)) {
-                        // Remove highlight from the just-completed question
-                        document.getElementById(`q${questionNumber}-block`).classList.remove('next-focus-question');
-
-                        // Find the next unranked question
-                        let jumped = false;
-                        for (let nextQNum = questionNumber + 1; nextQNum <= 20; nextQNum++) {
-                            if (!isQuestionRankedCorrectly(nextQNum)) {
-                                const nextQuestionBlock = document.getElementById(`q${nextQNum}-block`);
-                                nextQuestionBlock.classList.add('next-focus-question'); // Highlight the next one
-                                nextQuestionBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                updateQuestionError(nextQNum); // Display error if it's partially filled
-                                jumped = true;
-                                break; // Stop after finding and jumping to the first next unranked
-                            }
-                        }
-                        // If all questions are now answered, scroll to the submit button
-                        if (!jumped) {
-                            document.querySelector('button[type="submit"]').scrollIntoView({ behavior: 'smooth', block: 'end' });
-                        }
-                    }
+                    select.addEventListener('change', function() {
+                        validateQuestionSet(set);
+                    });
                 });
             });
 
-            // Function to calculate results based on ranks and the new keychart
-            function calculateResults(answers) {
-                const dimensionScores = {
-                    'D': 0, // Dimension D (Direk)
-                    'M': 0, // Dimension M (Menserig)
-                    'S': 0, // Dimension S (Stabiel)
-                    'C': 0  // Changed from 'B' to 'C' for consistency with EmailJS template (Berader/Counselor)
-                };
+            function validateQuestionSet(set) {
+                const selects = set.querySelectorAll('.rank-select');
+                const selectedRanks = Array.from(selects).map(s => s.value).filter(v => v !== '');
+                const uniqueRanks = new Set(selectedRanks);
+                const errorMessageDiv = set.querySelector('.question-error-message');
 
-                // New keychart mapping: Vraag,A,B,C,D -> Question,A,B,C,D
-                // For all questions (1-20): A->D, B->M, C->S, D->C
-                const dimensionMapping = {
-                    'a': 'D',
-                    'b': 'M',
-                    'c': 'S',
-                    'd': 'C' // Changed from 'B' to 'C'
-                };
-
-                // Scoring: 1st rank gets 4 points, 2nd gets 3, 3rd gets 2, 4th gets 1
-                const rankPoints = {
-                    '1': 4,
-                    '2': 3,
-                    '3': 2,
-                    '4': 1
-                };
-
-                // Loop through each question from 1 to 20
-                for (let i = 1; i <= 20; i++) {
-                    const qPrefix = `q${i}-`;
-                    const qAnswers = {
-                        'a': answers[qPrefix + 'a'],
-                        'b': answers[qPrefix + 'b'],
-                        'c': answers[qPrefix + 'c'],
-                        'd': answers[qPrefix + 'd']
-                    };
-
-                    // Assign points to dimensions based on the ranks
-                    for (const optionKey in qAnswers) {
-                        const rank = qAnswers[optionKey];
-                        const dimension = dimensionMapping[optionKey]; // Get the dimension for the option (a, b, c, or d)
-                        if (dimension && rankPoints[rank]) {
-                            dimensionScores[dimension] += rankPoints[rank];
-                        }
-                    }
-                }
-
-                // Determine the main result (highest scoring dimension)
-                let mainResultDimension = '';
-                let highestScore = -1;
-                let tiedDimensions = [];
-
-                for (const dimension in dimensionScores) {
-                    if (dimensionScores[dimension] > highestScore) {
-                        highestScore = dimensionScores[dimension];
-                        mainResultDimension = dimension;
-                        tiedDimensions = [dimension]; // Reset tied dimensions
-                    } else if (dimensionScores[dimension] === highestScore) {
-                        tiedDimensions.push(dimension); // Add to tied dimensions
-                    }
-                }
-
-                let mainResultText = '';
-                if (tiedDimensions.length > 1) {
-                    mainResultText = `Jou dominante funksioneringstyl is 'n kombinasie van: ${tiedDimensions.map(d => {
-                        switch(d) {
-                            case 'D': return 'Direkteur';
-                            case 'M': return 'Motiveerder';
-                            case 'S': return 'Spesialis';
-                            case 'C': return 'Berader'; // Changed from 'B' to 'C'
-                            default: return d;
-                        }
-                    }).join(' en ')}.`;
+                if (selectedRanks.length === 4 && uniqueRanks.size === 4) {
+                    set.classList.remove('unanswered-question', 'next-focus-question');
+                    errorMessageDiv.classList.add('hidden');
+                    return true;
                 } else {
-                    // Provide a more descriptive text based on the single dominant dimension
-                    switch (mainResultDimension) {
-                        case 'D':
-                            mainResultText = "Jou dominante funksioneringstyl is DIREKTEUR (D): Jy is doelgerig, besluitnemend, en hou daarvan om beheer te neem. Jy fokus op resultate en is nie bang vir uitdagings nie.";
-                            break;
-                        case 'M':
-                            mainResultText = "Jou dominante funksioneringstyl is MOTIVEERDER (M): Jy is samewerkend, empaties, en fokus op harmonie en verhoudings. Jy geniet dit om met mense te werk en is 'n goeie spanlid.";
-                            break;
-                        case 'S':
-                            mainResultText = "Jou dominante funksioneringstyl is SPESIALIS (S): Jy is geduldig, betroubaar, en verkies 'n voorspelbare omgewing. Jy is 'n goeie luisteraar en bring kalmte in spanne.";
-                            break;
-                        case 'C': // Changed from 'B' to 'C'
-                            mainResultText = "Jou dominante funksioneringstyl is BERADER (C): Jy is analities, noukeurig, en fokus op feite en akkuraatheid. Jy hou van detail en verseker dat werk aan hoë standaarde voldoen.";
-                            break;
-                        default:
-                            mainResultText = "Kon nie jou dominante funksioneringstyl bepaal nie.";
-                            break;
-                    }
+                    errorMessageDiv.classList.remove('hidden');
+                    return false;
                 }
-
-                // Generate detailed scores HTML
-                let detailedScoresHtml = `<div class="mt-4 text-left p-4 bg-gray-50 rounded-lg shadow-inner">`;
-                detailedScoresHtml += `<h4 class="text-lg font-semibold text-gray-700 mb-2">Gedetailleerde Telling:</h4>`;
-                detailedScoresHtml += `<p class="text-md text-gray-600 mb-1">Direkteur (D): ${dimensionScores['D']} punte</p>`;
-                detailedScoresHtml += `<p class="text-md text-gray-600 mb-1">Motiveerder (M): ${dimensionScores['M']} punte</p>`;
-                detailedScoresHtml += `<p class="text-md text-gray-600 mb-1">Spesialis (S): ${dimensionScores['S']} punte</p>`;
-                detailedScoresHtml += `<p class="text-md text-gray-600 mb-1">Berader (C): ${dimensionScores['C']} punte</p>`; // Changed from 'B' to 'C'
-                detailedScoresHtml += `</div>`;
-
-                return {
-                    main_result: mainResultText,
-                    detailed_scores_html: detailedScoresHtml,
-                    d_score: dimensionScores['D'],
-                    m_score: dimensionScores['M'],
-                    s_score: dimensionScores['S'],
-                    c_score: dimensionScores['C'] // Changed from 'b_score' to 'c_score'
-                };
             }
 
             form.addEventListener('submit', function(event) {
-                event.preventDefault(); // Prevent default form submission
+                event.preventDefault(); // Voorkom verstekvorm indiening
 
-                let allQuestionsValid = true;
-                // Validate all questions
-                for (let i = 1; i <= 20; i++) {
-                    if (!isQuestionRankedCorrectly(i)) { // Use isQuestionRankedCorrectly for overall validity
-                        allQuestionsValid = false;
+                let allSetsValid = true;
+                questionSets.forEach(set => {
+                    if (!validateQuestionSet(set)) {
+                        allSetsValid = false;
+                        set.classList.add('unanswered-question');
+                    } else {
+                        set.classList.remove('unanswered-question');
                     }
+                });
+
+                // Clear previous focus highlights
+                document.querySelectorAll('.next-focus-question').forEach(el => {
+                    el.classList.remove('next-focus-question');
+                });
+
+                if (!allSetsValid) {
+                    showMessage('Vul asseblief alle vraestelle korrek in (ken rangorde 1-4 presies een keer per vraestel toe).', 'error');
+                    const firstInvalid = document.querySelector('.unanswered-question');
+                    if (firstInvalid) {
+                        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        firstInvalid.classList.add('next-focus-question');
+                    }
+                    return; // Stop form submission
                 }
 
-                if (!userNameInput.value.trim()) {
-                    showMessage('Vul asseblief jou naam in.', 'error');
-                    userNameInput.focus();
-                    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top for name input error
-                    return;
-                }
+                let d_score = 0;
+                let m_score = 0;
+                let s_score = 0;
+                let c_score = 0;
 
-                if (!allQuestionsValid) {
-                    showMessage('Vul asseblief alle vrae korrek in voordat jy indien.', 'error');
-                    highlightFirstInvalidQuestionOnSubmit(); // Use the submit-specific highlight function
-                    return;
-                }
+                questionSets.forEach(set => {
+                    set.querySelectorAll('.statement-row').forEach(row => {
+                        const type = row.dataset.type;
+                        const rank = parseInt(row.querySelector('.rank-select').value);
 
-                // Gather all answers
-                const allAnswers = {};
-                for (let i = 1; i <= 20; i++) {
-                    const qPrefix = `q${i}-`;
-                    allAnswers[qPrefix + 'a'] = document.getElementById(qPrefix + 'a').value;
-                    allAnswers[qPrefix + 'b'] = document.getElementById(qPrefix + 'b').value;
-                    allAnswers[qPrefix + 'c'] = document.getElementById(qPrefix + 'c').value;
-                    allAnswers[qPrefix + 'd'] = document.getElementById(qPrefix + 'd').value;
-                }
+                        if (type === 'D') d_score += rank;
+                        else if (type === 'M') m_score += rank;
+                        else if (type === 'S') s_score += rank;
+                        else if (type === 'C') c_score += rank;
+                    });
+                });
 
-                // Calculate results
-                const { main_result: mainResultText, detailed_scores_html: detailedScoresHtml, d_score, m_score, s_score, c_score } = calculateResults(allAnswers);
+                // Vertoon resultate op die bladsy
+                resultsDisplay.classList.remove('hidden', 'bg-red-100', 'border-red-400', 'text-red-700');
+                resultsDisplay.classList.add('bg-blue-50', 'border-blue-400', 'text-blue-700');
+                resultDetailsElement.innerHTML = `
+                    <p><strong>Direkteur (D):</strong> ${d_score}</p>
+                    <p><strong>Motiveerder (M):</strong> ${m_score}</p>
+                    <p><strong>Spesialis (S):</strong> ${s_score}</p>
+                    <p><strong>Berader (B):</strong> ${c_score}</p>
+                `;
+                resultsDisplay.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-                // Prepare parameters for EmailJS
-                const serviceID = 'service_n3for6s'; // Replace with your EmailJS Service ID
-                const templateID = 'template_kifuzeo'; // Replace with your EmailJS Template ID
+                // Stuur e-pos met EmailJS
+                const serviceID = 'service_n3for6s'; // Updated Service ID
+                const templateID = 'template_kifuzeo'; // Updated Template ID
 
                 const templateParams = {
-                    recipient_name: userNameInput.value, // Changed user_name to recipient_name for template consistency
-                    assessment_name: "Funksioneringstyl Assessering", // Afrikaans name for the assessment
-                    main_result: mainResultText,
-                    detailed_scores_html: detailedScoresHtml,
-                    d_score: d_score, // Pass individual scores for potential use in email template
+                    recipient_name: userNameInput.value,
+                    d_score: d_score,
                     m_score: m_score,
                     s_score: s_score,
-                    c_score: c_score // Pass c_score for Counselor/Berader
+                    c_score: c_score
                 };
 
                 console.log('Attempting to send email with params:', templateParams); // DEBUG: Confirm email send attempt
                 emailjs.send(serviceID, templateID, templateParams)
                     .then(function(response) {
                         console.log('EmailJS SUCCESS!', response.status, response.text); // DEBUG: Confirm EmailJS success
-                        showMessage('Jou assessering is suksesvol ingedien!', 'success'); // Afrikaans for "Your assessment has been submitted successfully!"
-                        // Reset the form after successful submission
+                        showMessage('Jou assessering is suksesvol ingedien!', 'success');
+                        // Stel die vorm terug na suksesvolle indiening
                         form.reset();
-                        userNameInput.value = ''; // Clear name field
-                        // Scroll to the top after submission message
+                        userNameInput.value = ''; // Vee naamveld uit
+                        // Rol boontoe na indieningsboodskap
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                     }, function(error) {
                         console.log('EmailJS FAILED...', error); // DEBUG: Confirm EmailJS failure
-                        showMessage('Kon assessering nie indien nie. Probeer asseblief weer later.', 'error'); // Afrikaans for "Failed to submit assessment. Please try again later."
+                        showMessage('Kon assessering nie indien nie. Probeer asseblief weer later.', 'error');
                     });
             });
         });
