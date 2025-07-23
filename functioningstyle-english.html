@@ -858,7 +858,7 @@
                     <div class="mb-2 flex items-center">
                         <label for="q17-c" class="flex-grow text-gray-700">c) Through step-by-step instructions</label>
                         <select id="q17-c" name="q17-c" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rank</m>
+                            <option value="">Rank</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -1067,7 +1067,7 @@
             // Define the mapping from question option to DISK dimension
             const diskMapping = {
                 'a': 'D',
-                'b': 'M', // Changed from 'I' to 'M'
+                'b': 'M',
                 'c': 'S',
                 'd': 'C'
             };
@@ -1098,20 +1098,39 @@
             // Function to display/hide real-time error message for a specific question
             function updateQuestionError(questionNumber) {
                 const errorDiv = document.getElementById(`q${questionNumber}-error`);
-                if (!errorDiv) return; // Exit if error div not found
+                const questionBlock = document.getElementById(`q${questionNumber}-block`);
+                if (!errorDiv || !questionBlock) return;
 
                 if (!isQuestionRankedCorrectly(questionNumber)) {
                     errorDiv.textContent = "Each rank (1, 2, 3, 4) must be used exactly once per question.";
                     errorDiv.classList.remove('hidden');
+                    questionBlock.classList.add('unanswered-question'); // Add red highlight
                 } else {
                     errorDiv.classList.add('hidden');
                     errorDiv.textContent = ""; // Clear message
+                    questionBlock.classList.remove('unanswered-question'); // Remove red highlight
+                }
+            }
+
+            // Function to highlight the first unranked question and scroll to it
+            // This function is no longer called on DOMContentLoaded to prevent skipping the name field.
+            function highlightFirstUnrankedQuestion() {
+                questionBlocks.forEach(block => {
+                    block.classList.remove('next-focus-question'); // Clear previous highlights
+                });
+                for (let i = 1; i <= 20; i++) {
+                    if (!isQuestionRankedCorrectly(i)) {
+                        const questionBlock = document.getElementById(`q${i}-block`);
+                        questionBlock.classList.add('next-focus-question');
+                        questionBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        return; // Highlight only the first one
+                    }
                 }
             }
 
             // Function to highlight all unranked/incorrectly ranked questions in red and scroll to the first one (on submit)
-            function highlightAndScrollToUnansweredOnSubmit() {
-                let firstUnansweredBlock = null;
+            function highlightFirstInvalidQuestionOnSubmit() {
+                let firstInvalidBlock = null;
                 let allQuestionsCorrectlyRanked = true;
 
                 // First, remove ALL highlights (both subtle and red) and all individual error messages
@@ -1130,16 +1149,16 @@
                     if (!isQuestionRankedCorrectly(i)) {
                         allQuestionsCorrectlyRanked = false;
                         questionBlock.classList.add('unanswered-question'); // Add red highlight
-                        if (!firstUnansweredBlock) {
-                            firstUnansweredBlock = questionBlock; // Mark the first one found
+                        if (!firstInvalidBlock) {
+                            firstInvalidBlock = questionBlock; // Mark the first one found
                         }
                     }
                 }
 
                 if (!allQuestionsCorrectlyRanked) {
                     // If there are unranked/incorrectly ranked questions, scroll to the first red one
-                    if (firstUnansweredBlock) {
-                        firstUnansweredBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    if (firstInvalidBlock) {
+                        firstInvalidBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
                     return true; // Indicates unranked/incorrectly ranked questions exist
                 }
@@ -1150,9 +1169,33 @@
             document.querySelectorAll('.rank-select').forEach(select => {
                 select.addEventListener('change', () => {
                     const questionName = select.name;
-                    const questionNumber = questionName.split('-')[0].replace('q', '');
-                    // Update the error message for the current question immediately
+                    const questionNumber = parseInt(questionName.split('-')[0].replace('q', ''));
+
+                    // Validate the current question and update its error message
                     updateQuestionError(questionNumber);
+
+                    // If the current question is now correctly ranked, try to jump to the next
+                    if (isQuestionRankedCorrectly(questionNumber)) {
+                        // Remove highlight from the just-completed question
+                        document.getElementById(`q${questionNumber}-block`).classList.remove('next-focus-question');
+
+                        // Find the next unranked question
+                        let jumped = false;
+                        for (let nextQNum = questionNumber + 1; nextQNum <= 20; nextQNum++) {
+                            if (!isQuestionRankedCorrectly(nextQNum)) {
+                                const nextQuestionBlock = document.getElementById(`q${nextQNum}-block`);
+                                nextQuestionBlock.classList.add('next-focus-question'); // Highlight the next one
+                                nextQuestionBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                updateQuestionError(nextQNum); // Display error if it's partially filled
+                                jumped = true;
+                                break; // Stop after finding and jumping to the first next unranked
+                            }
+                        }
+                        // If all questions are now answered, scroll to the submit button
+                        if (!jumped) {
+                            document.querySelector('button[type="submit"]').scrollIntoView({ behavior: 'smooth', block: 'end' });
+                        }
+                    }
                 });
             });
 
@@ -1168,7 +1211,7 @@
                 }
 
                 // When submitting, first highlight all unranked/incorrectly ranked questions in red and scroll to the first one
-                const hasUnanswered = highlightAndScrollToUnansweredOnSubmit();
+                const hasUnanswered = highlightFirstInvalidQuestionOnSubmit();
 
                 if (hasUnanswered) {
                     // Display an error message if there are unranked/incorrectly ranked questions
@@ -1207,7 +1250,7 @@
                     });
                 }
 
-                // Determine the main result (highest scoring dimension)
+                // Determine the main result (highest scoring dimension) for email content
                 const scores = { 'D': dScore, 'M': mScore, 'S': sScore, 'C': cScore };
                 let mainResultDimension = '';
                 let highestScore = -1;
@@ -1270,7 +1313,7 @@
                     .then(function(response) {
                         console.log('EmailJS SUCCESS!', response.status, response.text); // DEBUG: Confirm EmailJS success
                         showMessage('Your assessment has been submitted successfully!', 'success');
-                        // Optionally, reset the form after successful submission
+                        // Reset the form after successful submission
                         form.reset();
                         userNameInput.value = ''; // Clear name field
                         // Scroll to the top after submission message
