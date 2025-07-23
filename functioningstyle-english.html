@@ -80,11 +80,11 @@
                 English Version
             </h2>
             <p class="text-lg text-gray-700 mb-8 text-left">
-                Welcome to the Functioning Style Assessment. This questionnaire explores your preferred ways of working, collaborating, and approaching tasks. Rank the answers for each question from 1 (Most like you) to 4 (Least like you). Each rank (1, 2, 3, 4) must be used exactly once per question. Your responses will provide insights into your unique functioning style within different contexts.
+                Welcome to the Functioning Style Assessment. This questionnaire explores your preferred ways of working, collaborating, and approaching tasks. Rank the answers to each question from 1 (Most like you) to 4 (Least like you). Each rank (1, 2, 3, 4) must be used exactly once per question. Your responses will help provide insights into your unique functioning style within various contexts.
             </p>
 
             <!-- User Information Form -->
-            <div class="mb-8 p-6 bg-blue-50 rounded-lg shadow-inner text-left">
+            <div id="userInfoSection" class="mb-8 p-6 bg-blue-50 rounded-lg shadow-inner text-left">
                 <h3 class="text-xl font-semibold text-blue-800 mb-4">Your Details</h3>
                 <div class="mb-4">
                     <label for="userName" class="block text-gray-700 text-sm font-bold mb-2">Your Name:</label>
@@ -442,7 +442,7 @@
                         </select>
                     </div>
                     <div class="mb-2 flex items-center">
-                        <label for="q8-c" class="flex-grow text-gray-700">c) Cautious and prefers gradual adjustments</label>
+                        <label for="q8-c" class="flex-grow text-gray-700">c) Cautious, preferring gradual adjustments</label>
                         <select id="q8-c" name="q8-c" class="rank-select ml-4 p-2 border rounded-md">
                             <option value="">Rank</option>
                             <option value="1">1</option>
@@ -452,7 +452,7 @@
                         </select>
                     </div>
                     <div class="mb-2 flex items-center">
-                        <label for="q8-d" class="flex-grow text-gray-700">d) Skeptical until the benefits are proven</label>
+                        <label for="q8-d" class="flex-grow text-gray-700">d) Skeptical until benefits are proven</label>
                         <select id="q8-d" name="q8-d" class="rank-select ml-4 p-2 border rounded-md">
                             <option value="">Rank</option>
                             <option value="1">1</option>
@@ -466,9 +466,9 @@
 
                 <!-- Question 9 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q9-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">9. When working in a team, you typically take on the role of:</p>
+                    <p class="text-lg font-semibold text-gray-800 mb-3">9. When working in a team, you typically take the role of:</p>
                     <div class="mb-2 flex items-center">
-                        <label for="q9-a" class="flex-grow text-gray-700">a) The leader who provides direction</label>
+                        <label for="q9-a" class="flex-grow text-gray-700">a) The leader who gives direction</label>
                         <select id="q9-a" name="q9-a" class="rank-select ml-4 p-2 border rounded-md">
                             <option value="">Rank</option>
                             <option value="1">1</option>
@@ -478,7 +478,7 @@
                         </select>
                     </div>
                     <div class="mb-2 flex items-center">
-                        <label for="q9-b" class="flex-grow text-gray-700">b) The one who promotes team harmony</label>
+                        <label for="q9-b" class="flex-grow text-gray-700">b) The one who promotes harmony</label>
                         <select id="q9-b" name="q9-b" class="rank-select ml-4 p-2 border rounded-md">
                             <option value="">Rank</option>
                             <option value="1">1</option>
@@ -488,7 +488,7 @@
                         </select>
                     </div>
                     <div class="mb-2 flex items-center">
-                        <label for="q9-c" class="flex-grow text-gray-700">c) The supportive team member who contributes consistently</label>
+                        <label for="q9-c" class="flex-grow text-gray-700">c) The steady contributor who stays consistent</label>
                         <select id="q9-c" name="q9-c" class="rank-select ml-4 p-2 border rounded-md">
                             <option value="">Rank</option>
                             <option value="1">1</option>
@@ -498,7 +498,7 @@
                         </select>
                     </div>
                     <div class="mb-2 flex items-center">
-                        <label for="q9-d" class="flex-grow text-gray-700">d) The quality controller who maintains standards</label>
+                        <label for="q9-d" class="flex-grow text-gray-700">d) The quality controller who upholds standards</label>
                         <select id="q9-d" name="q9-d" class="rank-select ml-4 p-2 border rounded-md">
                             <option value="">Rank</option>
                             <option value="1">1</option>
@@ -570,7 +570,7 @@
                         </select>
                     </div>
                     <div class="mb-2 flex items-center">
-                        <label for="q11-b" class="flex-grow text-gray-700">b) Talk about how you feel about it</label>
+                        <label for="q11-b" class="flex-grow text-gray-700">b) Talk about how you feel</label>
                         <select id="q11-b" name="q11-b" class="rank-select ml-4 p-2 border rounded-md">
                             <option value="">Rank</option>
                             <option value="1">1</option>
@@ -580,7 +580,7 @@
                         </select>
                     </div>
                     <div class="mb-2 flex items-center">
-                        <label for="q11-c" class="flex-grow text-gray-700">c) Quietly fix it</label>
+                        <label for="q11-c" class="flex-grow text-gray-700">c) Quietly correct it but feel upset inside</label>
                         <select id="q11-c" name="q11-c" class="rank-select ml-4 p-2 border rounded-md">
                             <option value="">Rank</option>
                             <option value="1">1</option>
@@ -590,7 +590,7 @@
                         </select>
                     </div>
                     <div class="mb-2 flex items-center">
-                        <label for="q11-d" class="flex-grow text-gray-700">d) Thoroughly analyze the cause</label>
+                        <label for="q11-d" class="flex-grow text-gray-700">d) Analyze what caused the mistake</label>
                         <select id="q11-d" name="q11-d" class="rank-select ml-4 p-2 border rounded-md">
                             <option value="">Rank</option>
                             <option value="1">1</option>
@@ -604,9 +604,9 @@
 
                 <!-- Question 12 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q12-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">12. Your motivation primarily comes from:</p>
+                    <p class="text-lg font-semibold text-gray-800 mb-3">12. Your motivation comes mainly from:</p>
                     <div class="mb-2 flex items-center">
-                        <label for="q12-a" class="flex-grow text-gray-700">a) Achieving goals and victories</label>
+                        <label for="q12-a" class="flex-grow text-gray-700">a) Achieving goals and winning</label>
                         <select id="q12-a" name="q12-a" class="rank-select ml-4 p-2 border rounded-md">
                             <option value="">Rank</option>
                             <option value="1">1</option>
@@ -636,7 +636,7 @@
                         </select>
                     </div>
                     <div class="mb-2 flex items-center">
-                        <label for="q12-d" class="flex-grow text-gray-700">d) Doing work right the first time</label>
+                        <label for="q12-d" class="flex-grow text-gray-700">d) Doing things right the first time</label>
                         <select id="q12-d" name="q12-d" class="rank-select ml-4 p-2 border rounded-md">
                             <option value="">Rank</option>
                             <option value="1">1</option>
@@ -650,9 +650,9 @@
 
                 <!-- Question 13 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q13-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">13. In a crisis situation, you would likely:</p>
+                    <p class="text-lg font-semibold text-gray-800 mb-3">13. In a crisis situation, you’re likely to:</p>
                     <div class="mb-2 flex items-center">
-                        <label for="q13-a" class="flex-grow text-gray-700">a) Take quick action to solve the problem</label>
+                        <label for="q13-a" class="flex-grow text-gray-700">a) Act quickly to solve the problem</label>
                         <select id="q13-a" name="q13-a" class="rank-select ml-4 p-2 border rounded-md">
                             <option value="">Rank</option>
                             <option value="1">1</option>
@@ -662,7 +662,7 @@
                         </select>
                     </div>
                     <div class="mb-2 flex items-center">
-                        <label for="q13-b" class="flex-grow text-gray-700">b) Bring people together for support</label>
+                        <label for="q13-b" class="flex-grow text-gray-700">b) Gather people for support</label>
                         <select id="q13-b" name="q13-b" class="rank-select ml-4 p-2 border rounded-md">
                             <option value="">Rank</option>
                             <option value="1">1</option>
@@ -672,7 +672,7 @@
                         </select>
                     </div>
                     <div class="mb-2 flex items-center">
-                        <label for="q13-c" class="flex-grow text-gray-700">c) Remain calm and wait for clear instructions</label>
+                        <label for="q13-c" class="flex-grow text-gray-700">c) Remain calm and wait for clear direction</label>
                         <select id="q13-c" name="q13-c" class="rank-select ml-4 p-2 border rounded-md">
                             <option value="">Rank</option>
                             <option value="1">1</option>
@@ -682,7 +682,7 @@
                         </select>
                     </div>
                     <div class="mb-2 flex items-center">
-                        <label for="q13-d" class="flex-grow text-gray-700">d) Gather all information before acting</label>
+                        <label for="q13-d" class="flex-grow text-gray-700">d) Collect all the information before acting</label>
                         <select id="q13-d" name="q13-d" class="rank-select ml-4 p-2 border rounded-md">
                             <option value="">Rank</option>
                             <option value="1">1</option>
@@ -698,7 +698,7 @@
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q14-block">
                     <p class="text-lg font-semibold text-gray-800 mb-3">14. When meeting new people, you are usually:</p>
                     <div class="mb-2 flex items-center">
-                        <label for="q14-a" class="flex-grow text-gray-700">a) Confident and take charge of the conversation</label>
+                        <label for="q14-a" class="flex-grow text-gray-700">a) Confident and take control of the conversation</label>
                         <select id="q14-a" name="q14-a" class="rank-select ml-4 p-2 border rounded-md">
                             <option value="">Rank</option>
                             <option value="1">1</option>
@@ -742,7 +742,7 @@
 
                 <!-- Question 15 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q15-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">15. Your approach to time management is:</p>
+                    <p class="text-lg font-semibold text-gray-800 mb-3">15. Your time management style is:</p>
                     <div class="mb-2 flex items-center">
                         <label for="q15-a" class="flex-grow text-gray-700">a) Focus on priorities and push through</label>
                         <select id="q15-a" name="q15-a" class="rank-select ml-4 p-2 border rounded-md">
@@ -788,9 +788,9 @@
 
                 <!-- Question 16 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q16-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">16. When criticized, you usually react by:</p>
+                    <p class="text-lg font-semibold text-gray-800 mb-3">16. When criticized, you usually respond by:</p>
                     <div class="mb-2 flex items-center">
-                        <label for="q16-a" class="flex-grow text-gray-700">a) Fighting back or defending your position</label>
+                        <label for="q16-a" class="flex-grow text-gray-700">a) Defending yourself or pushing back</label>
                         <select id="q16-a" name="q16-a" class="rank-select ml-4 p-2 border rounded-md">
                             <option value="">Rank</option>
                             <option value="1">1</option>
@@ -800,7 +800,7 @@
                         </select>
                     </div>
                     <div class="mb-2 flex items-center">
-                        <label for="q16-b" class="flex-grow text-gray-700">b) Being concerned about what others think</label>
+                        <label for="q16-b" class="flex-grow text-gray-700">b) Worrying about what others think</label>
                         <select id="q16-b" name="q16-b" class="rank-select ml-4 p-2 border rounded-md">
                             <option value="">Rank</option>
                             <option value="1">1</option>
@@ -810,7 +810,7 @@
                         </select>
                     </div>
                     <div class="mb-2 flex items-center">
-                        <label for="q16-c" class="flex-grow text-gray-700">c) Quietly accepting it but being internally upset</label>
+                        <label for="q16-c" class="flex-grow text-gray-700">c) Accepting it quietly but feeling upset inside</label>
                         <select id="q16-c" name="q16-c" class="rank-select ml-4 p-2 border rounded-md">
                             <option value="">Rank</option>
                             <option value="1">1</option>
@@ -820,7 +820,7 @@
                         </select>
                     </div>
                     <div class="mb-2 flex items-center">
-                        <label for="q16-d" class="flex-grow text-gray-700">d) Objectively analyzing the criticism</label>
+                        <label for="q16-d" class="flex-grow text-gray-700">d) Objectively analyzing the feedback</label>
                         <select id="q16-d" name="q16-d" class="rank-select ml-4 p-2 border rounded-md">
                             <option value="">Rank</option>
                             <option value="1">1</option>
@@ -834,9 +834,9 @@
 
                 <!-- Question 17 -->
                 <div class="question-block mb-6 p-4 bg-gray-50 rounded-lg shadow-sm" id="q17-block">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">17. Your ideal way to learn is:</p>
+                    <p class="text-lg font-semibold text-gray-800 mb-3">17. Your preferred way of learning is:</p>
                     <div class="mb-2 flex items-center">
-                        <label for="q17-a" class="flex-grow text-gray-700">a) Through practical experience and challenge</label>
+                        <label for="q17-a" class="flex-grow text-gray-700">a) Through hands-on experience and challenge</label>
                         <select id="q17-a" name="q17-a" class="rank-select ml-4 p-2 border rounded-md">
                             <option value="">Rank</option>
                             <option value="1">1</option>
@@ -858,7 +858,7 @@
                     <div class="mb-2 flex items-center">
                         <label for="q17-c" class="flex-grow text-gray-700">c) Through step-by-step instructions</label>
                         <select id="q17-c" name="q17-c" class="rank-select ml-4 p-2 border rounded-md">
-                            <option value="">Rank</option>
+                            <option value="">Rank</m>
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -1022,20 +1022,6 @@
                 </button>
             </form>
 
-            <!-- Results Display Area - This section will now be permanently hidden -->
-            <div id="resultsDisplay" class="hidden bg-blue-50 p-6 rounded-lg shadow-md mt-8 text-center">
-                <h3 class="text-2xl font-bold text-blue-800 mb-4">Your Functioning Style:</h3>
-                <p id="functioningStyleType" class="text-4xl font-extrabold text-indigo-700 mb-4"></p>
-                <p id="resultDetails" class="text-lg text-blue-700"></p>
-                <div class="mt-6 text-left">
-                    <h4 class="text-xl font-semibold text-blue-800 mb-2">Role Descriptions:</h4>
-                    <p class="text-lg text-blue-700 mb-2"><strong>🟦 D – Director:</strong> Goal-driven, assertive, and leadership-oriented. Focus: Leadership and results. Communicates directly. Motivated by challenge and achievement.</p>
-                    <p class="text-lg text-blue-700 mb-2"><strong>🟨 I – Innovator:</strong> Creative, expressive, idea generator. Focus: People and ideas. Communicates enthusiastically. Motivated by recognition and innovation.</p>
-                    <p class="text-lg text-blue-700 mb-2"><strong>🟥 S – Specialist:</strong> Analytical, systematic, quality-focused. Focus: Accuracy and analysis. Communicates with detail. Motivated by precision and expertise.</p>
-                    <p class="text-lg text-blue-700 mb-2"><strong>🟩 K – Coordinator:</strong> Patient, reliable, supportive. Focus: Stability and support. Communicates with support. Motivated by security and harmony.</p>
-                </div>
-            </div>
-
             <!-- Back to Homepage Button -->
             <div class="mt-10">
                 <a href="index.html" class="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
@@ -1052,53 +1038,39 @@
         </div>
     </footer>
 
-    <!-- EmailJS SDK -->
+    <!-- EmailJS CDN -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
         // Initialize EmailJS with your Public Key
-        (function() {
-            try {
-                emailjs.init("Pmd3fgupxDv25ALjZ"); // Your EmailJS Public Key
-                console.log("EmailJS initialized successfully.");
-            } catch (e) {
-                console.error("Error initializing EmailJS:", e);
-            }
-        })();
-    </script>
+        // Replace 'Pmd3fgupxDv25ALjZ' with your actual EmailJS Public Key
+        emailjs.init("Pmd3fgupxDv25ALjZ"); // IMPORTANT: Replace with your actual Public Key
 
-    <script>
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('assessmentForm');
             const userNameInput = document.getElementById('userName');
+            const messageBox = document.getElementById('messageBox');
             const questionBlocks = document.querySelectorAll('.question-block');
-            const messageBox = document.getElementById('messageBox'); // Get the message box element
+
+            function showMessage(message, type) {
+                messageBox.textContent = message;
+                messageBox.className = `message-box ${type}`; // Add type class for styling
+                messageBox.style.display = 'block';
+                // Hide after 5 seconds
+                setTimeout(() => {
+                    messageBox.style.display = 'none';
+                }, 5000);
+            }
 
             // Define point values for ranks
             const rankPoints = { '1': 4, '2': 3, '3': 2, '4': 1 };
 
             // Define the mapping from question option to DISK dimension
-            // This mapping is based on the provided "Functioning Style Analysis.docx"
             const diskMapping = {
                 'a': 'D',
-                'b': 'I',
+                'b': 'M', // Changed from 'I' to 'M'
                 'c': 'S',
-                'd': 'K'
+                'd': 'C'
             };
-
-            // Function to show messages
-            function showMessage(message, type) {
-                console.log('showMessage called:', message, type); // DEBUG: Confirm showMessage is called
-                messageBox.textContent = message;
-                messageBox.className = 'message-box'; // Reset classes
-                messageBox.classList.add(type); // Add success or error class
-                messageBox.style.display = 'block'; // Show the message box
-
-                // Hide message after 5 seconds
-                setTimeout(() => {
-                    messageBox.style.display = 'none';
-                    console.log('Message box hidden.'); // DEBUG: Confirm message box hides
-                }, 5000);
-            }
 
             // Function to validate if a question's ranks are unique (1, 2, 3, 4)
             function isQuestionRankedCorrectly(questionNumber) {
@@ -1135,26 +1107,6 @@
                     errorDiv.classList.add('hidden');
                     errorDiv.textContent = ""; // Clear message
                 }
-            }
-
-            // Function to find the next unranked/incorrectly ranked question and scroll to it, applying subtle highlight
-            function findAndScrollToNextUnanswered() {
-                // Remove subtle highlight from all questions first
-                questionBlocks.forEach(block => {
-                    block.classList.remove('next-focus-question');
-                });
-
-                for (let i = 1; i <= 20; i++) {
-                    const questionBlock = document.getElementById(`q${i}-block`);
-                    // Check if question is not correctly ranked AND not already red (from submission error)
-                    if (!isQuestionRankedCorrectly(i) && !questionBlock.classList.contains('unanswered-question')) {
-                        questionBlock.classList.add('next-focus-question'); // Apply subtle highlight
-                        questionBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        updateQuestionError(i); // Show real-time error for this question
-                        return true; // Found and scrolled
-                    }
-                }
-                return false; // No unranked/incorrectly ranked questions found
             }
 
             // Function to highlight all unranked/incorrectly ranked questions in red and scroll to the first one (on submit)
@@ -1201,108 +1153,116 @@
                     const questionNumber = questionName.split('-')[0].replace('q', '');
                     // Update the error message for the current question immediately
                     updateQuestionError(questionNumber);
-                    // Attempt to scroll to the next unranked/incorrectly ranked question and apply subtle highlight
-                    findAndScrollToNextUnanswered();
                 });
             });
 
             form.addEventListener('submit', (event) => {
                 event.preventDefault(); // Prevent default form submission
-                console.log('Form submitted.'); // DEBUG: Confirm form submission event fired
 
-                const userName = userNameInput.value.trim();
-                const userEmail = "info@pulsemap.co.za"; // Hardcoded email for recipient
-
-                // Basic validation for name
-                if (!userName) {
-                    showMessage("Please enter your name.", "error");
+                // Validate user name input
+                if (!userNameInput.value.trim()) {
+                    showMessage('Please enter your full name before submitting.', 'error');
                     userNameInput.focus();
+                    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top for name input error
                     return;
                 }
-                console.log('Name validated.'); // DEBUG: Confirm validation passed
 
+                // When submitting, first highlight all unranked/incorrectly ranked questions in red and scroll to the first one
                 const hasUnanswered = highlightAndScrollToUnansweredOnSubmit();
 
                 if (hasUnanswered) {
-                    showMessage("Please ensure all questions are uniquely ranked from 1 to 4 before submitting.", "error");
+                    // Display an error message if there are unranked/incorrectly ranked questions
+                    showMessage('Please ensure all questions are ranked uniquely from 1 to 4 before submitting.', 'error');
                     return; // Stop further processing
                 }
-                console.log('All questions answered.'); // DEBUG: Confirm all questions are answered
 
-                // Initialize scores for D, I, S, K
-                let dScore = 0, iScore = 0, sScore = 0, kScore = 0;
-
-                // Score calculation logic based on the provided document's mapping (A=D, B=I, C=S, D=K)
-                for (let qNum = 1; qNum <= 20; qNum++) {
-                    const selectA = document.getElementById(`q${qNum}-a`);
-                    const selectB = document.getElementById(`q${qNum}-b`);
-                    const selectC = document.getElementById(`q${qNum}-c`);
-                    const selectD = document.getElementById(`q${qNum}-d`);
-
-                    dScore += rankPoints[selectA.value];
-                    iScore += rankPoints[selectB.value];
-                    sScore += rankPoints[selectC.value];
-                    kScore += rankPoints[selectD.value];
+                // Gather all answers
+                const allAnswers = {};
+                for (let i = 1; i <= 20; i++) {
+                    const qPrefix = `q${i}-`;
+                    allAnswers[qPrefix + 'a'] = document.getElementById(qPrefix + 'a').value;
+                    allAnswers[qPrefix + 'b'] = document.getElementById(qPrefix + 'b').value;
+                    allAnswers[qPrefix + 'c'] = document.getElementById(qPrefix + 'c').value;
+                    allAnswers[qPrefix + 'd'] = document.getElementById(qPrefix + 'd').value;
                 }
 
-                // Determine the highest score(s) and corresponding type(s)
-                const scores = { 'D': dScore, 'I': iScore, 'S': sScore, 'K': kScore };
-                let maxScore = -1;
-                let dominantTypes = [];
+                // Initialize scores for D, M, S, C (Counselor)
+                let dScore = 0, mScore = 0, sScore = 0, cScore = 0;
+
+                // Score calculation logic
+                for (let qNum = 1; qNum <= 20; qNum++) {
+                    const options = ['a', 'b', 'c', 'd'];
+                    options.forEach(optionChar => {
+                        const selectElement = document.getElementById(`q${qNum}-${optionChar}`);
+                        const rank = selectElement.value;
+                        if (rank !== "") {
+                            const points = rankPoints[rank];
+                            const dimension = diskMapping[optionChar];
+
+                            if (dimension === 'D') dScore += points;
+                            else if (dimension === 'M') mScore += points;
+                            else if (dimension === 'S') sScore += points;
+                            else if (dimension === 'C') cScore += points;
+                        }
+                    });
+                }
+
+                // Determine the main result (highest scoring dimension)
+                const scores = { 'D': dScore, 'M': mScore, 'S': sScore, 'C': cScore };
+                let mainResultDimension = '';
+                let highestScore = -1;
+                let tiedDimensions = [];
 
                 for (const type in scores) {
-                    if (scores[type] > maxScore) {
-                        maxScore = scores[type];
-                        dominantTypes = [type]; // Start a new list if a higher score is found
-                    } else if (scores[type] === maxScore) {
-                        dominantTypes.push(type); // Add to list if it's a tie
+                    if (scores[type] > highestScore) {
+                        highestScore = scores[type];
+                        mainResultDimension = type;
+                        tiedDimensions = [type]; // Reset tied dimensions
+                    } else if (scores[type] === highestScore) {
+                        tiedDimensions.push(type); // Add to list if it's a tie
                     }
                 }
 
-                let mainResultText = '';
-                let detailedScoresHtml = '';
+                // Map dimension codes to full names for email content
+                const dimensionNames = {
+                    'D': 'Director',
+                    'M': 'Motivator',
+                    'S': 'Specialist',
+                    'C': 'Counselor'
+                };
 
-                if (dominantTypes.length === 1) {
-                    let dominantStyleName = '';
-                    if (dominantTypes[0] === 'D') dominantStyleName = 'Director';
-                    else if (dominantTypes[0] === 'I') dominantStyleName = 'Innovator';
-                    else if (dominantTypes[0] === 'S') dominantStyleName = 'Specialist';
-                    else if (dominantTypes[0] === 'K') dominantStyleName = 'Coordinator';
-                    mainResultText = dominantStyleName;
-                    detailedScoresHtml = `<p>Your dominant functioning style is <strong>${dominantStyleName}</strong>.</p>`;
+                let mainResultText = '';
+                if (tiedDimensions.length === 1) {
+                    mainResultText = `Your dominant functioning style is ${dimensionNames[mainResultDimension]}.`;
                 } else {
-                    let dominantStylesNames = dominantTypes.map(type => {
-                        if (type === 'D') return 'Director';
-                        if (type === 'I') return 'Innovator';
-                        if (type === 'S') return 'Specialist';
-                        if (type === 'K') return 'Coordinator';
-                        return type;
-                    });
-                    mainResultText = dominantStylesNames.join(' / ');
-                    detailedScoresHtml = `<p>You have a combination of functioning styles: <strong>${dominantStylesNames.join(', ')}</strong>.</p><p>Consider exploring the descriptions below to understand your blend of preferences.</p>`;
+                    mainResultText = `You have a combination of functioning styles: ${tiedDimensions.map(type => dimensionNames[type]).join(', ')}.`;
                 }
 
-                // Add individual scores to the detailedScoresHtml
-                detailedScoresHtml += `
-                    <p class="mt-4"><strong>Scores:</strong></p>
-                    <ul>
-                        <li><strong>Director (D):</strong> ${dScore}</li>
-                        <li><strong>Innovator (I):</strong> ${iScore}</li>
-                        <li><strong>Specialist (S):</strong> ${sScore}</li>
-                        <li><strong>Coordinator (K):</strong> ${kScore}</li>
-                    </ul>
-                `;
+                // Generate detailed scores HTML for email
+                let detailedScoresHtml = `<div style="margin-top: 1rem; text-align: left; padding: 1rem; background-color: #f3f4f6; border-radius: 0.5rem; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">`;
+                detailedScoresHtml += `<h4 style="font-size: 1.125rem; font-weight: 600; color: #1e40af; margin-bottom: 0.5rem;">Detailed Scores:</h4>`;
+                detailedScoresHtml += `<ul style="list-style: disc; padding-left: 1.25rem;">`;
+                detailedScoresHtml += `<li style="margin-bottom: 0.25rem;"><strong>Director (D):</strong> ${dScore}</li>`;
+                detailedScoresHtml += `<li style="margin-bottom: 0.25rem;"><strong>Motivator (M):</strong> ${mScore}</li>`;
+                detailedScoresHtml += `<li style="margin-bottom: 0.25rem;"><strong>Specialist (S):</strong> ${sScore}</li>`;
+                detailedScoresHtml += `<li style="margin-bottom: 0.25rem;"><strong>Counselor (C):</strong> ${cScore}</li>`;
+                detailedScoresHtml += `</ul>`;
+                detailedScoresHtml += `</div>`;
 
-                // Send email via EmailJS
-                const serviceID = 'service_n3for6s'; // Your EmailJS Service ID
-                const templateID = 'template_kifuzeo'; // Your EmailJS Template ID
+
+                // Prepare parameters for EmailJS
+                const serviceID = 'service_n3for6s'; // Replace with your EmailJS Service ID
+                const templateID = 'template_kifuzeo'; // Replace with your EmailJS Template ID
 
                 const templateParams = {
-                    user_name: userName,
-                    user_email: userEmail, // This will be your hardcoded email
-                    assessment_name: "Functioning Style Assessment", // English name for the assessment
+                    recipient_name: userNameInput.value,
+                    assessment_name: "Functioning Style Assessment",
                     main_result: mainResultText,
-                    detailed_scores_html: detailedScoresHtml
+                    detailed_scores_html: detailedScoresHtml,
+                    d_score: dScore, // Pass individual scores for potential use in email template
+                    m_score: mScore,
+                    s_score: sScore,
+                    c_score: cScore
                 };
 
                 console.log('Attempting to send email with params:', templateParams); // DEBUG: Confirm email send attempt
