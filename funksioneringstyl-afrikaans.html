@@ -40,7 +40,7 @@
             transform: translateX(-50%);
             padding: 1rem 2rem;
             border-radius: 0.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px (0, 0, 0, 0.1);
             z-index: 1000;
             display: none; /* Hidden by default */
             font-weight: bold;
@@ -850,7 +850,7 @@
                         <select id="q17-b" name="q17-b" class="rank-select ml-4 p-2 border rounded-md">
                             <option value="">Rang</option>
                             <option value="1">1</option>
-                            <option value="2">2</option>
+                            <option value="2">2</slect>
                             <option value="3">3</option>
                             <option value="4">4</option>
                         </select>
@@ -860,7 +860,7 @@
                         <select id="q17-c" name="q17-c" class="rank-select ml-4 p-2 border rounded-md">
                             <option value="">Rang</option>
                             <option value="1">1</option>
-                            <option value="2">2</slect>
+                            <option value="2">2</option>
                             <option value="3">3</option>
                             <option value="4">4</option>
                         </select>
@@ -1043,7 +1043,7 @@
             const form = document.getElementById('assessmentForm');
             const userNameInput = document.getElementById('userName');
             const messageBox = document.getElementById('messageBox');
-            const userInfoSection = document.getElementById('userInfoSection'); // Keep this reference for validation
+            const questionBlocks = document.querySelectorAll('.question-block'); // Get all question blocks
 
             function showMessage(message, type) {
                 messageBox.textContent = message;
@@ -1055,62 +1055,116 @@
                 }, 5000);
             }
 
-            // Function to validate a single question
-            function validateQuestion(questionNumber) {
-                const questionBlock = document.getElementById(`q${questionNumber}-block`);
-                const selects = questionBlock.querySelectorAll('.rank-select');
-                const selectedRanks = [];
-                let isValid = true;
+            // Function to validate if a question's ranks are unique (1, 2, 3, 4)
+            function isQuestionRankedCorrectly(questionNumber) {
+                const ranks = [];
+                const selects = document.querySelectorAll(`#q${questionNumber}-block .rank-select`);
+                let allSelected = true;
 
                 selects.forEach(select => {
                     if (select.value === "") {
-                        isValid = false;
+                        allSelected = false;
                     } else {
-                        selectedRanks.push(select.value);
+                        ranks.push(select.value);
                     }
                 });
 
-                const errorMessageDiv = document.getElementById(`q${questionNumber}-error`);
-                if (!isValid) {
-                    questionBlock.classList.add('unanswered-question');
-                    errorMessageDiv.textContent = "Vul asseblief alle rangordes vir hierdie vraag in.";
-                    errorMessageDiv.classList.remove('hidden');
-                } else if (new Set(selectedRanks).size !== selectedRanks.length) {
-                    isValid = false;
-                    questionBlock.classList.add('unanswered-question');
-                    errorMessageDiv.textContent = "Elke rang (1, 2, 3, 4) moet presies een keer gebruik word per vraag.";
-                    errorMessageDiv.classList.remove('hidden');
+                if (!allSelected) {
+                    return false; // Not all options ranked
+                }
+
+                // Check for unique ranks (1, 2, 3, 4)
+                const uniqueRanks = new Set(ranks);
+                return uniqueRanks.size === 4 && ['1', '2', '3', '4'].every(r => uniqueRanks.has(r));
+            }
+
+            // Function to display/hide real-time error message for a specific question
+            function updateQuestionError(questionNumber) {
+                const errorDiv = document.getElementById(`q${questionNumber}-error`);
+                const questionBlock = document.getElementById(`q${questionNumber}-block`);
+                if (!errorDiv || !questionBlock) return;
+
+                if (!isQuestionRankedCorrectly(questionNumber)) {
+                    errorDiv.textContent = "Elke rang (1, 2, 3, 4) moet presies een keer gebruik word per vraag.";
+                    errorDiv.classList.remove('hidden');
+                    questionBlock.classList.add('unanswered-question'); // Add red highlight
                 } else {
-                    questionBlock.classList.remove('unanswered-question');
-                    errorMessageDiv.classList.add('hidden');
-                    errorMessageDiv.textContent = ""; // Clear message
-                }
-                return isValid;
-            }
-
-            // Add real-time validation for each question block
-            for (let i = 1; i <= 20; i++) {
-                const questionBlock = document.getElementById(`q${i}-block`);
-                if (questionBlock) {
-                    questionBlock.addEventListener('change', function() {
-                        validateQuestion(i);
-                        // Remove 'next-focus-question' if currently focused
-                        questionBlock.classList.remove('next-focus-question');
-                    });
+                    errorDiv.classList.add('hidden');
+                    errorDiv.textContent = ""; // Clear message
+                    questionBlock.classList.remove('unanswered-question'); // Remove red highlight
                 }
             }
 
-            // Function to highlight the first invalid question
-            function highlightFirstInvalidQuestion() {
+            // Function to highlight the first invalid question (on submit)
+            function highlightFirstInvalidQuestionOnSubmit() {
+                let firstInvalidBlock = null;
+                let allQuestionsCorrectlyRanked = true;
+
+                // First, remove ALL highlights (both subtle and red) and all individual error messages
+                questionBlocks.forEach((block, index) => {
+                    block.classList.remove('unanswered-question', 'next-focus-question');
+                    const errorDiv = document.getElementById(`q${index + 1}-error`);
+                    if (errorDiv) {
+                        errorDiv.classList.add('hidden');
+                        errorDiv.textContent = "";
+                    }
+                });
+
+                // Iterate through questions to find truly unranked/incorrectly ranked ones and apply red highlight
                 for (let i = 1; i <= 20; i++) {
                     const questionBlock = document.getElementById(`q${i}-block`);
-                    if (questionBlock && questionBlock.classList.contains('unanswered-question')) {
-                        questionBlock.classList.add('next-focus-question');
-                        questionBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        return;
+                    if (!isQuestionRankedCorrectly(i)) {
+                        allQuestionsCorrectlyRanked = false;
+                        questionBlock.classList.add('unanswered-question'); // Add red highlight
+                        if (!firstInvalidBlock) {
+                            firstInvalidBlock = questionBlock; // Mark the first one found
+                        }
                     }
                 }
+
+                if (!allQuestionsCorrectlyRanked) {
+                    // If there are unranked/incorrectly ranked questions, scroll to the first red one
+                    if (firstInvalidBlock) {
+                        firstInvalidBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                    return true; // Indicates unranked/incorrectly ranked questions exist
+                }
+                return false; // All questions are correctly ranked
             }
+
+            // Add change event listeners to all rank select dropdowns for real-time validation and scrolling
+            document.querySelectorAll('.rank-select').forEach(select => {
+                select.addEventListener('change', () => {
+                    const questionName = select.name;
+                    const questionNumber = parseInt(questionName.split('-')[0].replace('q', ''));
+
+                    // Validate the current question and update its error message
+                    updateQuestionError(questionNumber);
+
+                    // If the current question is now correctly ranked, try to jump to the next
+                    if (isQuestionRankedCorrectly(questionNumber)) {
+                        // Remove highlight from the just-completed question
+                        document.getElementById(`q${questionNumber}-block`).classList.remove('next-focus-question');
+
+                        // Find the next unranked question
+                        let jumped = false;
+                        for (let nextQNum = questionNumber + 1; nextQNum <= 20; nextQNum++) {
+                            if (!isQuestionRankedCorrectly(nextQNum)) {
+                                const nextQuestionBlock = document.getElementById(`q${nextQNum}-block`);
+                                nextQuestionBlock.classList.add('next-focus-question'); // Highlight the next one
+                                nextQuestionBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                updateQuestionError(nextQNum); // Display error if it's partially filled
+                                jumped = true;
+                                break; // Stop after finding and jumping to the first next unranked
+                            }
+                        }
+                        // If all questions are now answered, scroll to the submit button
+                        if (!jumped) {
+                            document.querySelector('button[type="submit"]').scrollIntoView({ behavior: 'smooth', block: 'end' });
+                        }
+                    }
+                });
+            });
 
             // Function to calculate results based on ranks and the new keychart
             function calculateResults(answers) {
@@ -1118,16 +1172,16 @@
                     'D': 0, // Dimension D (Direk)
                     'M': 0, // Dimension M (Menserig)
                     'S': 0, // Dimension S (Stabiel)
-                    'B': 0  // Dimension B (Bedag)
+                    'C': 0  // Changed from 'B' to 'C' for consistency with EmailJS template (Berader/Counselor)
                 };
 
                 // New keychart mapping: Vraag,A,B,C,D -> Question,A,B,C,D
-                // For all questions (1-20): A->D, B->M, C->S, D->B
+                // For all questions (1-20): A->D, B->M, C->S, D->C
                 const dimensionMapping = {
                     'a': 'D',
                     'b': 'M',
                     'c': 'S',
-                    'd': 'B'
+                    'd': 'C' // Changed from 'B' to 'C'
                 };
 
                 // Scoring: 1st rank gets 4 points, 2nd gets 3, 3rd gets 2, 4th gets 1
@@ -1180,7 +1234,7 @@
                             case 'D': return 'Direkteur';
                             case 'M': return 'Motiveerder';
                             case 'S': return 'Spesialis';
-                            case 'B': return 'Berader';
+                            case 'C': return 'Berader'; // Changed from 'B' to 'C'
                             default: return d;
                         }
                     }).join(' en ')}.`;
@@ -1196,8 +1250,8 @@
                         case 'S':
                             mainResultText = "Jou dominante funksioneringstyl is SPESIALIS (S): Jy is geduldig, betroubaar, en verkies 'n voorspelbare omgewing. Jy is 'n goeie luisteraar en bring kalmte in spanne.";
                             break;
-                        case 'B':
-                            mainResultText = "Jou dominante funksioneringstyl is BERADER (B): Jy is analities, noukeurig, en fokus op feite en akkuraatheid. Jy hou van detail en verseker dat werk aan hoë standaarde voldoen.";
+                        case 'C': // Changed from 'B' to 'C'
+                            mainResultText = "Jou dominante funksioneringstyl is BERADER (C): Jy is analities, noukeurig, en fokus op feite en akkuraatheid. Jy hou van detail en verseker dat werk aan hoë standaarde voldoen.";
                             break;
                         default:
                             mainResultText = "Kon nie jou dominante funksioneringstyl bepaal nie.";
@@ -1208,21 +1262,19 @@
                 // Generate detailed scores HTML
                 let detailedScoresHtml = `<div class="mt-4 text-left p-4 bg-gray-50 rounded-lg shadow-inner">`;
                 detailedScoresHtml += `<h4 class="text-lg font-semibold text-gray-700 mb-2">Gedetailleerde Telling:</h4>`;
-                for (const dimension in dimensionScores) {
-                    let dimensionName = '';
-                    switch (dimension) {
-                        case 'D': dimensionName = 'Direkteur'; break;
-                        case 'M': dimensionName = 'Motiveerder'; break;
-                        case 'S': dimensionName = 'Spesialis'; break;
-                        case 'B': dimensionName = 'Berader'; break;
-                    }
-                    detailedScoresHtml += `<p class="text-md text-gray-600 mb-1">${dimensionName} (Dimensie ${dimension}): ${dimensionScores[dimension]} punte</p>`;
-                }
+                detailedScoresHtml += `<p class="text-md text-gray-600 mb-1">Direkteur (D): ${dimensionScores['D']} punte</p>`;
+                detailedScoresHtml += `<p class="text-md text-gray-600 mb-1">Motiveerder (M): ${dimensionScores['M']} punte</p>`;
+                detailedScoresHtml += `<p class="text-md text-gray-600 mb-1">Spesialis (S): ${dimensionScores['S']} punte</p>`;
+                detailedScoresHtml += `<p class="text-md text-gray-600 mb-1">Berader (C): ${dimensionScores['C']} punte</p>`; // Changed from 'B' to 'C'
                 detailedScoresHtml += `</div>`;
 
                 return {
                     main_result: mainResultText,
-                    detailed_scores_html: detailedScoresHtml
+                    detailed_scores_html: detailedScoresHtml,
+                    d_score: dimensionScores['D'],
+                    m_score: dimensionScores['M'],
+                    s_score: dimensionScores['S'],
+                    c_score: dimensionScores['C'] // Changed from 'b_score' to 'c_score'
                 };
             }
 
@@ -1232,7 +1284,7 @@
                 let allQuestionsValid = true;
                 // Validate all questions
                 for (let i = 1; i <= 20; i++) {
-                    if (!validateQuestion(i)) {
+                    if (!isQuestionRankedCorrectly(i)) { // Use isQuestionRankedCorrectly for overall validity
                         allQuestionsValid = false;
                     }
                 }
@@ -1246,7 +1298,7 @@
 
                 if (!allQuestionsValid) {
                     showMessage('Vul asseblief alle vrae korrek in voordat jy indien.', 'error');
-                    highlightFirstInvalidQuestion();
+                    highlightFirstInvalidQuestionOnSubmit(); // Use the submit-specific highlight function
                     return;
                 }
 
@@ -1261,17 +1313,21 @@
                 }
 
                 // Calculate results
-                const { main_result: mainResultText, detailed_scores_html: detailedScoresHtml } = calculateResults(allAnswers);
+                const { main_result: mainResultText, detailed_scores_html: detailedScoresHtml, d_score, m_score, s_score, c_score } = calculateResults(allAnswers);
 
                 // Prepare parameters for EmailJS
                 const serviceID = 'service_n3for6s'; // Replace with your EmailJS Service ID
                 const templateID = 'template_kifuzeo'; // Replace with your EmailJS Template ID
 
                 const templateParams = {
-                    user_name: userNameInput.value,
+                    recipient_name: userNameInput.value, // Changed user_name to recipient_name for template consistency
                     assessment_name: "Funksioneringstyl Assessering", // Afrikaans name for the assessment
                     main_result: mainResultText,
-                    detailed_scores_html: detailedScoresHtml
+                    detailed_scores_html: detailedScoresHtml,
+                    d_score: d_score, // Pass individual scores for potential use in email template
+                    m_score: m_score,
+                    s_score: s_score,
+                    c_score: c_score // Pass c_score for Counselor/Berader
                 };
 
                 console.log('Attempting to send email with params:', templateParams); // DEBUG: Confirm email send attempt
