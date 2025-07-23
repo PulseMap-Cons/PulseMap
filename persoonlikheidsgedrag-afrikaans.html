@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Persoonlikheidsgedrag Analise - Afrikaans</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Custom CSS for the Inter font */
@@ -59,8 +60,10 @@
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
+    <!-- Header Section - Reusing the same header structure as index.html -->
     <header class="bg-white shadow-md py-4">
         <div class="container mx-auto px-4 flex justify-center items-center">
+            <!-- Business Logo as Title -->
             <img src="https://i.imgur.com/Zx34Iky.png" alt="PulseMap Logo" class="h-10">
         </div>
     </header>
@@ -71,12 +74,14 @@
             <p class="text-gray-600 text-center mb-6">Beantwoord elke vraag eerlik. Daar is geen regte of verkeerde antwoorde nie. Hierdie assessering sal help om jou persoonlikheidstipe te bepaal gebaseer op gevestigde raamwerke.</p>
 
             <form id="assessmentForm" class="space-y-6">
+                <!-- User Name Input -->
                 <div class="mb-6">
                     <label for="userName" class="block text-lg font-medium text-gray-700 mb-2">Jou Naam:</label>
                     <input type="text" id="userName" name="userName" required
                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-lg">
                 </div>
 
+                <!-- Section: Ekstroversie (E) vs. Introversie (I) -->
                 <h2 class="text-2xl font-semibold text-gray-700 mb-4">1. Energiebron: Ekstroversie (E) vs. Introversie (I)</h2>
                 <p class="text-gray-600 mb-4">Hoe verkies jy om jou energie te fokus?</p>
                 <div class="space-y-4" data-section="EI">
@@ -138,6 +143,7 @@
                     </div>
                 </div>
 
+                <!-- Section: Sensing (S) vs. iNtuition (N) -->
                 <h2 class="text-2xl font-semibold text-gray-700 mb-4 mt-8">2. Inligting Waarneming: Sensing (S) vs. iNtuition (N)</h2>
                 <p class="text-gray-600 mb-4">Hoe verkies jy om inligting in te neem?</p>
                 <div class="space-y-4" data-section="SN">
@@ -199,6 +205,7 @@
                     </div>
                 </div>
 
+                <!-- Section: Thinking (T) vs. Feeling (F) -->
                 <h2 class="text-2xl font-semibold text-gray-700 mb-4 mt-8">3. Besluitneming: Thinking (T) vs. Feeling (F)</h2>
                 <p class="text-gray-600 mb-4">Hoe verkies jy om besluite te neem?</p>
                 <div class="space-y-4" data-section="TF">
@@ -260,6 +267,7 @@
                     </div>
                 </div>
 
+                <!-- Section: Judging (J) vs. Perceiving (P) -->
                 <h2 class="text-2xl font-semibold text-gray-700 mb-4 mt-8">4. Lewenstyl Voorkeur: Judging (J) vs. Perceiving (P)</h2>
                 <p class="text-gray-600 mb-4">Hoe verkies jy om jou uiterlike lewe te lei?</p>
                 <div class="space-y-4" data-section="JP">
@@ -328,21 +336,25 @@
                 </div>
             </form>
 
+            <!-- Results Display Section -->
             <div id="resultsDisplay" class="hidden mt-10 p-6 border-2 rounded-lg text-center">
                 <h2 class="text-2xl font-bold text-gray-800 mb-4">Jou Persoonlikheidstipe:</h2>
                 <p id="personalityType" class="text-5xl font-extrabold text-blue-600 mb-4"></p>
                 <div id="resultDetails" class="text-lg text-gray-700 leading-relaxed space-y-2">
-                    </div>
+                    <!-- Details will be dynamically inserted here -->
+                </div>
             </div>
         </div>
     </main>
 
+    <!-- Footer Section -->
     <footer class="bg-gray-800 text-white py-6">
         <div class="container mx-auto px-4 text-center">
             <p class="text-sm">© 2024 PulseMap. Alle regte voorbehou.</p>
         </div>
     </footer>
 
+    <!-- EmailJS CDN -->
     <script type="text/javascript" src="https://cdn.emailjs.com/sdk/2.6.4/email.min.js"></script>
     <script type="text/javascript">
         // Initialize EmailJS with your Public Key
